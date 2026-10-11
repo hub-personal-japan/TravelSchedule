@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>旅ノート</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap">
+<style>
+*{box-sizing:border-box}
+:root{--ink:#2b2d42;--mut:#6b6f8a;--card:rgba(255,255,255,.93);--in:#fff;--pk:#ff5d8f;--bl:#27b5ea;--yl:#ffd23f;--gr:#2fcf8d;--bg:linear-gradient(160deg,#ffd6e8,#fff1c9 45%,#c9f0ff);--cols:150px 200px 110px 110px 100px 150px 90px 34px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--ink:#f4f1ff;--mut:#b4b0d6;--card:rgba(40,36,80,.93);--in:#1d1a3d;--bg:linear-gradient(160deg,#3b1f5e,#1f2a5e 55%,#0f4c6b)}}
+:root[data-theme=dark]{--ink:#f4f1ff;--mut:#b4b0d6;--card:rgba(40,36,80,.93);--in:#1d1a3d;--bg:linear-gradient(160deg,#3b1f5e,#1f2a5e 55%,#0f4c6b)}
+html,body{height:100%;margin:0}
+body{background:var(--bg) fixed;color:var(--ink);font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN',system-ui,sans-serif;overflow-x:hidden;overflow-y:auto}
+body::before{content:'✈️ 🌴 🗼 🧳 🏝️ 🗽 🌺 🍜 🐪 🦘 ✈️ 🌴 🗼 🧳 🏝️ 🗽 🌺 🍜 🐪 🦘 ✈️ 🌴 🗼 🧳 🏝️ 🗽 🌺 🍜';position:fixed;inset:0;font-size:46px;letter-spacing:70px;line-height:150px;opacity:.13;pointer-events:none;overflow:hidden}
+#app{position:relative;max-width:1100px;margin:0 auto;padding:14px}
+@media(min-aspect-ratio:3/2) and (min-width:900px){#app{max-width:1400px}.grid{grid-template-columns:repeat(3,1fr)!important}}
+h1{margin:6px 0;font-size:28px;color:var(--pk)}h2{margin:0 0 8px;font-size:18px}h3{margin:0;font-size:20px;color:var(--pk)}
+.card{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 6px 0 rgba(255,93,143,.25);margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.grid .card{margin:0}.trip{cursor:pointer}.trip:hover{transform:translateY(-2px)}
+input,select{background:var(--in);color:var(--ink);border:2px solid #ff5d8f55;border-radius:10px;padding:6px 8px;font:inherit;min-width:0;max-width:100%}
+input:focus,select:focus{outline:none;border-color:var(--bl)}
+.btn,.chip{border:0;border-radius:99px;padding:8px 16px;font:inherit;font-weight:700;cursor:pointer;background:var(--pk);color:#fff}
+.chip{background:var(--in);color:var(--ink);border:2px solid #ff5d8f55;padding:5px 12px;margin:2px}.chip.on{background:var(--yl);color:#333;border-color:var(--yl)}
+.btn.s{padding:4px 12px;font-size:13px}.btn.b{background:var(--bl)}.btn.g{background:var(--mut)}
+label{display:inline-block;margin:4px 8px 4px 0;font-size:13px}label input{display:block}
+#cd{background:linear-gradient(135deg,#ff5d8f,#ffb347);color:#fff;font-size:18px}#cd b{font-size:30px}
+.sy,.tz,small,.mut{color:var(--mut);font-size:12px}
+.sc{overflow-x:auto;padding-bottom:6px}
+.row{display:grid;grid-template-columns:var(--cols);gap:4px;align-items:center;padding:4px 0;border-bottom:1px dashed #0002;min-width:max-content}
+.row input:not([type=time]){width:100%}.row input[type=time]{width:calc(50% - 6px)}
+.row.hd{font-size:12px;font-weight:700;color:var(--mut)}
+.row.now{background:#ffd23f55;border-radius:10px;box-shadow:0 0 0 2px var(--yl)}.row.past{opacity:.55}
+.mk{position:absolute;margin-left:-20px}.row>.c{position:relative;padding-left:14px}
+.df{font-weight:700;text-align:right;padding-right:6px}
+.dh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}.sum{margin-left:auto;color:var(--bl)}
+.im{display:flex;gap:4px;align-items:center}.im img{width:40px;height:40px;object-fit:cover;border-radius:8px;cursor:zoom-in}
+.im img.big{position:fixed;inset:5%;width:90%;height:90%;object-fit:contain;z-index:9;background:#000b;cursor:zoom-out}
+.up{cursor:pointer;font-size:20px;margin:0}.x{border:0;background:none;color:var(--mut);cursor:pointer;font-size:16px}
+.rt{display:inline-block;background:var(--in);border-radius:14px;padding:6px 10px;margin:4px;font-size:13px}
+#tt{font-size:16px;position:sticky;bottom:0;z-index:2}
+details.wd{margin:6px 0}.wd label{display:inline-flex;align-items:center;gap:4px}
+@media(max-width:600px){#app{padding:8px}h1{font-size:22px}}
+</style></head><body><div id="app"></div>
+<script>
+const CT={JP:['日本','JPY',1,0,'🗾'],KR:['韓国','KRW',.1161,0,'🇰🇷'],US:['アメリカ東部','USD',159,-14,'🗽'],HI:['ハワイ','USD',159,-19,'🌺'],EG:['エジプト','EGP',3.2,-7,'🐪'],ID:['バリ','IDR',.009,-1,'🌴'],TH:['タイ','THB',4.6,-2,'🛕'],TW:['台湾','TWD',4.9,-1,'🧋'],VN:['ベトナム','VND',.0062,-2,'🍜'],SG:['シンガポール','SGD',117,-1,'🦁'],FR:['フランス','EUR',175,-8,'🗼'],AU:['オーストラリア','AUD',103,1,'🦘']};
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9),fmt=n=>Math.round(n).toLocaleString('ja-JP');
+const addD=(s,n)=>new Date(new Date(s+'T00:00:00Z').getTime()+n*864e5).toISOString().slice(0,10);
+const mn=s=>s?(+s.slice(0,2))*60+(+s.slice(3,5)):null;
+const R=a=>({a,t1:'',t2:'',p:'',r:'',n:'',img:''});
+let S={trips:[],cw:[150,200,110,110,100,150,90]},cur=null,arch=0,doc=null,lastJ='',tm;
+const cfg=(t,c)=>c==='JP'?{r:1,z:0}:(t.cfg[c]||(t.cfg[c]={r:CT[c][2],z:CT[c][3]}));
+function mk(name,start,end){const n=Math.max(1,Math.round((new Date(end)-new Date(start))/864e5));
+ const days=[{id:uid(),label:'事前準備',date:'',cc:'JP',rows:['航空券','ホテル代','eSIM','海外保険'].map(R)}];
+ for(let i=0;i<=n;i++)days.push({id:uid(),label:i==0?'出発日':i==n?'帰国日':'Day'+i,date:addD(start,i),cc:'JP',rows:[R('')]});
+ days.push({id:uid(),label:'その他',date:'',cc:'JP',rows:[R('お土産予算'),R('予備費')]});
+ return{id:uid(),name,start,end,arch:0,cs:[],cfg:{},days}}
+function tot(t){let P=0,Rr=0;t.days.forEach(d=>{const k=cfg(t,d.cc).r;d.rows.forEach(x=>{P+=(+x.p||0)*k;Rr+=+x.r||0})});return[P,Rr]}
+function dep(t){const d=t.days.find(d=>d.date==t.start),r=d&&d.rows.find(r=>r.t1);return new Date(t.start+'T'+(r?r.t1:'00:00')+':00+09:00')}
+function nextTrip(){const n=Date.now();let b=null;S.trips.filter(t=>!t.arch&&t.start).forEach(t=>{const ts=+dep(t);if(ts>n&&(!b||ts<b.ts))b={t,ts}});return b}
+function jst(t1,z,cc){if(!t1||cc=='JP')return'';const m=mn(t1)-z*60,s=Math.floor(m/1440),k=((m%1440)+1440)%1440;return`日本 ${String(k/60|0).padStart(2,'0')}:${String(k%60).padStart(2,'0')}${s?(s>0?'(翌)':'(前)'):''}`}
+function card(t){const[P,Rr]=tot(t);return`<div class="card trip" data-act=open data-id=${t.id}><h2>${esc(t.name||'無題')}</h2><div class=mut>${t.start} → ${t.end}</div><div style="font-size:24px">${t.cs.map(c=>CT[c][4]).join(' ')||'🗾'}</div><div>予算 <b>¥${fmt(P)}</b><br>使用 <b>¥${fmt(Rr)}</b></div><div style="margin-top:8px"><button class="btn s b" data-act=arch data-id=${t.id}>${t.arch?'復元':'アーカイブ'}</button> <button class="btn s g" data-act=del data-id=${t.id}>削除</button></div></div>`}
+function home(){const L=S.trips.filter(t=>!!t.arch==!!arch);
+ return`<h1>✈️ 旅ノート <button class=chip data-act=theme>🌓</button></h1><div class=sy id=sy></div>
+<div class=grid style="margin:10px 0"><div class=card id=cd></div><div class=card><h2>🆕 新しい日程表</h2><input id=nn placeholder="例: 2027.4 バリ旅" style="width:100%"><label>出発日<input id=ns type=date></label><label>帰国日<input id=ne type=date></label><br><button class=btn data-act=new>作成</button></div></div>
+<div><button class="chip ${arch?'':'on'}" data-act=tab data-v=0>🧳 進行中</button><button class="chip ${arch?'on':''}" data-act=tab data-v=1>📦 アーカイブ</button></div>
+<div class=grid style="margin-top:8px">${L.map(card).join('')||'<p class=mut>まだありません</p>'}</div>`}
+function tv(t){
+ const chips=Object.keys(CT).filter(c=>c!='JP').map(c=>`<button class="chip ${t.cs.includes(c)?'on':''}" data-act=tgl data-c=${c}>${CT[c][4]} ${CT[c][0]}</button>`).join('');
+ const rt=t.cs.map(c=>{const g=cfg(t,c);return`<div class=rt><b>${CT[c][4]} ${CT[c][1]}</b> 1=<input data-g=r data-c=${c} type=number step=any value="${g.r}" style="width:84px">円　時差<input data-g=z data-c=${c} type=number step=1 value="${g.z}" style="width:56px">h</div>`}).join('');
+ const wd=['時間','行動','予定','結果','差額','備考','画像'].map((n,i)=>`<label>${n}<input type=range min=50 max=400 value=${S.cw[i]} data-w=${i}></label>`).join('');
+ const days=t.days.map((d,di)=>{const g=cfg(t,d.cc),cu=CT[d.cc][1];
+  return`<section class=card><div class=dh><h3>${esc(d.label)}</h3>${d.date?`<input type=date data-dt=${di} value="${d.date}">`:''}<select data-df=cc data-d=${di}>${['JP',...t.cs].map(c=>`<option value=${c} ${c==d.cc?'selected':''}>${CT[c][4]} ${CT[c][0]}</option>`).join('')}</select><span class=tz>${d.cc!='JP'?`時差${g.z>=0?'+':''}${g.z}h・1${cu}=${g.r}円`:''}</span><b class=sum data-ds=${di}></b></div>
+<div class=sc><div class="row hd"><span>時間(現地・5分刻み)</span><span>行動予定</span><span>費用予定(${cu})</span><span>支払結果(円)</span><span>差額(円)</span><span>備考</span><span>画像</span><span></span></div>
+${d.rows.map((r,ri)=>`<div class=row data-d=${di} data-i=${ri}><div class=c><span class=mk></span>${d.date?`<input type=time step=300 data-f=t1 value="${r.t1}">–<input type=time step=300 data-f=t2 value="${r.t2}">`:''}<small>${jst(r.t1,g.z,d.cc)}</small></div><input data-f=a value="${esc(r.a)}" placeholder="行動・項目"><input data-f=p type=number inputmode=decimal value="${r.p}"><input data-f=r type=number inputmode=decimal value="${r.r}"><span class=df data-diff="${di},${ri}"></span><input data-f=n value="${esc(r.n)}"><div class=im>${r.img?`<img src="${r.img}" data-act=zoom>`:''}<label class=up>📷<input type=file accept="image/*" hidden data-up="${di},${ri}"></label></div><button class=x data-act=delrow data-d=${di} data-i=${ri}>✕</button></div>`).join('')}</div>
+<button class="btn s" data-act=addrow data-d=${di}>＋行を追加</button></section>`}).join('');
+ return`<h1><button class=chip data-act=back>← 戻る</button> <input data-tf=name value="${esc(t.name)}" style="font-size:20px;width:min(100%,360px)"> <button class=chip data-act=theme>🌓</button></h1>
+<div class=card><h2>🌏 訪れる国(複数選択)</h2>${chips}<div>${rt}</div><div class=mut>※レートは円換算(手入力・編集可)。時差は「現地−日本」の時間。</div><details class=wd><summary>📐 列の幅調整</summary>${wd}</details></div>${days}<div class=card id=tt></div>`}
+function render(){$('#app').innerHTML=cur?tv(cur):home();setCols();recalc();live();const s=$('#sy');if(s)s.textContent=doc?'☁️ データはPC・スマホ間で同期中':'📱 この端末のみ保存(同期はサインイン時)'}
+function setCols(){document.documentElement.style.setProperty('--cols',S.cw.map(w=>w+'px').join(' ')+' 34px')}
+function recalc(){const t=cur;if(!t)return;t.days.forEach((d,di)=>{const k=cfg(t,d.cc).r;let p=0,r=0;d.rows.forEach((x,ri)=>{const pj=(+x.p||0)*k;p+=pj;r+=+x.r||0;const e=$(`[data-diff="${di},${ri}"]`);if(e)e.textContent=x.r!==''?fmt(pj-(+x.r)):''});const e=$(`[data-ds="${di}"]`);if(e)e.textContent=`予算 ¥${fmt(p)} / 使用 ¥${fmt(r)}`});
+ const[P,Rr]=tot(t),e=$('#tt');if(e)e.innerHTML=`💰 合計　予算 <b>¥${fmt(P)}</b>　使用 <b>¥${fmt(Rr)}</b>　差額 <b>¥${fmt(P-Rr)}</b>`}
+function nowIn(z){const d=new Date(Date.now()+(9+z)*36e5);return[d.toISOString().slice(0,10),d.getUTCHours()*60+d.getUTCMinutes()]}
+function live(){const cd=$('#cd');if(cd){const b=nextTrip();if(b){const m=Math.floor((b.ts-Date.now())/6e4);cd.innerHTML=`🛫 次の渡航先：<b>${esc(b.t.name)}</b> ${b.t.cs.map(c=>CT[c][4]).join('')}<br>あと <b>${m/1440|0}</b>日 <b>${(m%1440)/60|0}</b>時間 <b>${m%60}</b>分`}else cd.innerHTML='🌈 日程表を作って次の旅を決めよう!'}
+ if(!cur)return;cur.days.forEach((d,di)=>{if(!d.date)return;const[nd,nm]=nowIn(cfg(cur,d.cc).z);d.rows.forEach((r,ri)=>{const el=$(`.row[data-d="${di}"][data-i="${ri}"]`);if(!el)return;const s=mn(r.t1);let e=mn(r.t2);if(e==null||(s!=null&&e<=s)){const nx=d.rows.slice(ri+1).find(x=>x.t1);e=nx?mn(nx.t1):1440}
+  let st='';if(d.date<nd)st='past';else if(d.date==nd&&s!=null){if(nm>=e)st='past';else if(nm>=s)st='now'}
+  el.classList.toggle('past',st=='past');el.classList.toggle('now',st=='now');$('.mk',el).textContent=st=='now'?'📍':st=='past'?'✅':''})})}
+function save(){clearTimeout(tm);tm=setTimeout(()=>{lastJ=JSON.stringify(S);try{localStorage.setItem('tabi',lastJ)}catch(e){}if(doc)doc.set({json:lastJ}).catch(()=>{})},500)}
+function shrink(f){return new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,640/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.6))};i.src=URL.createObjectURL(f)})}
+async function up(f){try{const a=await claude.use('assets');if(a){const r=await a.upload(f);return r.url}}catch(e){}return shrink(f)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;e.stopPropagation();const a=b.dataset.act,d=+b.dataset.d,i=+b.dataset.i,id=b.dataset.id,T=S.trips.find(t=>t.id==id);
+ if(a=='open'){cur=T}else if(a=='back'){cur=null}else if(a=='tab'){arch=+b.dataset.v}
+ else if(a=='new'){const s=$('#ns').value||new Date().toISOString().slice(0,10),en=$('#ne').value||addD(s,2);S.trips.push(mk($('#nn').value||'新しい旅',s,en))}
+ else if(a=='arch'){T.arch=T.arch?0:1}else if(a=='del'){if(!confirm('削除しますか?'))return;S.trips=S.trips.filter(t=>t.id!=id)}
+ else if(a=='tgl'){const c=b.dataset.c,k=cur.cs.indexOf(c);if(k<0)cur.cs.push(c);else{cur.cs.splice(k,1);cur.days.forEach(x=>{if(x.cc==c)x.cc='JP'})}}
+ else if(a=='addrow'){cur.days[d].rows.push(R(''))}else if(a=='delrow'){cur.days[d].rows.splice(i,1)}
+ else if(a=='zoom'){b.classList.toggle('big');return}
+ else if(a=='theme'){const r=document.documentElement;r.dataset.theme=(r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))=='dark'?'light':'dark';return}
+ save();render()});
+document.addEventListener('input',e=>{const el=e.target,q=el.dataset;
+ if(q.w!=null){S.cw[+q.w]=+el.value;setCols();save()}
+ else if(q.f){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.f]=el.value;recalc();live();save()}
+ else if(q.g){cfg(cur,q.c)[q.g]=+el.value;recalc();save()}else if(q.tf){cur[q.tf]=el.value;save()}});
+document.addEventListener('change',e=>{const el=e.target,q=el.dataset;
+ if(q.df){cur.days[+q.d].cc=el.value;save();render()}else if(q.g){render()}
+ else if(q.dt){cur.days[+q.dt].date=el.value;save();render()}
+ else if(q.up){const[d,i]=q.up.split(',').map(Number);if(el.files[0])up(el.files[0]).then(u=>{cur.days[d].rows[i].img=u;save();render()})}});
+function adopt(j){try{const o=JSON.parse(j);S={trips:o.trips||[],cw:o.cw||S.cw};if(cur)cur=S.trips.find(t=>t.id==cur.id)||null;const a=document.activeElement;if(!a||!/INPUT|SELECT/.test(a.tagName))render()}catch(e){}}
+try{adopt(localStorage.getItem('tabi')||'{}')}catch(e){}
+render();setInterval(live,30000);
+(async()=>{try{if(!window.claude)return;const[u,db]=await Promise.all([claude.use('user'),claude.use('db')]);if(!u||!db)return;const id=await u.id();doc=db.collection('data/users/'+id).doc('trips');render();
+ doc.onSnapshot(s=>{const d=s.exists&&s.data();if(!d||!d.json){if(S.trips.length)save();return}if(d.json!==lastJ){lastJ=d.json;adopt(d.json)}},()=>{})}catch(e){}})();
+</script></body></html>
