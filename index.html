@@ -1,8 +1,7 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>TRAVEL NOTE</title>
 <style>
 *{box-sizing:border-box}
-:root{--bg:#f3f1ed;--card:#fff;--ink:#1e2124;--mut:#7b766e;--ac:#2f3e46;--gd:#a68a56;--line:#e1dcd3;--in:#faf9f6;--now:#f1e9d6}
-@media(prefers-color-scheme:dark){:root{--bg:#15171a;--card:#1e2125;--ink:#ecebe8;--mut:#9a968f;--ac:#c9b27c;--gd:#c9b27c;--line:#33363b;--in:#17191c;--now:#3a3427}}
+:root{color-scheme:dark;--bg:#0a0c0c;--card:#131716;--ink:#e8f1ee;--mut:#86a097;--ac:#6ee7b7;--gd:#6ee7b7;--line:#24302c;--in:#0e1211;--now:#143328}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',Meiryo,system-ui,sans-serif;font-size:14px}
 #app{max-width:1500px;margin:0 auto;padding:16px}
 h1{font-size:15px;letter-spacing:.3em;margin:4px 0 14px;font-weight:600}h2{font-size:15px;margin:0 0 10px;font-weight:600}h3{margin:0;font-size:16px;font-weight:600}
@@ -10,13 +9,12 @@ h1{font-size:15px;letter-spacing:.3em;margin:4px 0 14px;font-weight:600}h2{font-
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}.grid .card{margin:0}
 input,select{background:var(--in);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:0 8px;font:inherit;min-width:0;height:32px}
 input:focus,select:focus{outline:none;border-color:var(--gd)}
-button{font:inherit;cursor:pointer;border:1px solid var(--ac);background:var(--ac);color:var(--card);border-radius:4px;padding:0 14px;height:32px}
+button{font:inherit;cursor:pointer;border:1px solid var(--ac);background:var(--ac);color:#04130d;border-radius:4px;padding:0 14px;height:32px}
 button.o{background:none;color:var(--ink);border-color:var(--line)}button.o.on{border-color:var(--gd);color:var(--gd);font-weight:700}button.s{height:26px;padding:0 10px;font-size:12px}
 .mut{color:var(--mut);font-size:12px}.sy{color:var(--mut);font-size:12px;margin-left:8px}
-.hero{background:var(--ac);color:var(--card);border-color:var(--ac)}.hero .mut{color:#d8d2c4}
-@media(prefers-color-scheme:dark){.hero{color:#15171a}.hero .mut{color:#3a3427}}
+.hero{background:linear-gradient(135deg,#0f2a22,#0c1513);border-color:var(--ac)}.hero #cd{color:var(--ac)}
 #cd{font-size:clamp(18px,4.2vw,34px);white-space:nowrap;font-weight:600;margin:4px 0 12px}
-.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.kv div{border-top:1px solid #ffffff44;padding-top:6px;white-space:nowrap}.kv b{display:block;font-size:15px;font-weight:600}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px 16px}.kv div{border-top:1px solid #6ee7b755;padding-top:6px;min-width:0}.kv b{display:block;font-size:15px;font-weight:600;overflow-wrap:anywhere}
 .cn{border:1px solid var(--line);border-radius:6px;padding:10px;background:var(--card);color:var(--ink);white-space:nowrap}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .day{container-type:inline-size}
@@ -24,12 +22,12 @@ button.o{background:none;color:var(--ink);border-color:var(--line)}button.o.on{b
 .row{display:grid;grid-template-columns:var(--cols);gap:6px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
 .row.now{background:var(--now);box-shadow:0 0 0 3px var(--now)}.row.past{opacity:.5}
 .f{display:flex;flex-direction:column;min-width:0}.f>label{font-size:10px;color:var(--mut);height:14px;white-space:nowrap;overflow:hidden}
-.f input,.f select{width:100%}.tt{display:flex;gap:4px}.tt input{text-align:center}
+.f input,.f select{width:100%}.tt{display:flex;gap:4px}.tt input{text-align:center;padding:0 2px;font-size:12px}
 .hint{font-size:10px;color:var(--mut);height:16px;line-height:16px;white-space:nowrap;overflow:hidden}
 .i{min-height:62px}.i .pic{display:flex;gap:4px;height:48px;align-items:center}.i img{height:48px;max-width:100%;object-fit:cover;border-radius:4px;cursor:zoom-in}
 .i img.big{position:fixed;inset:4%;width:92%;height:92%;object-fit:contain;background:#000c;z-index:9;cursor:zoom-out;border-radius:0}
 .up{display:inline-flex;align-items:center;justify-content:center;border:1px dashed var(--mut);border-radius:4px;height:32px;padding:0 8px;font-size:12px;cursor:pointer;color:var(--mut);white-space:nowrap}
-.badge{font-size:10px;background:var(--gd);color:#fff;border-radius:3px;padding:0 5px;margin-left:4px}
+.badge{font-size:10px;background:var(--gd);color:#04130d;border-radius:3px;padding:0 5px;margin-left:4px}
 .ck{display:flex;gap:6px;align-items:center;margin:4px 0}.ck input[type=text]{flex:1}.ck.d input[type=text]{text-decoration:line-through;color:var(--mut)}
 .cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @container (max-width:999px){.row{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"t t c x" "a a a i" "p l f y" "d n n n"}.t{grid-area:t}.c{grid-area:c}.a{grid-area:a}.p{grid-area:p}.l{grid-area:l}.fe{grid-area:f}.y{grid-area:y}.d{grid-area:d}.n{grid-area:n}.i{grid-area:i}.x{grid-area:x}}
@@ -50,7 +48,7 @@ const uid=()=>Math.random().toString(36).slice(2,9),fmt=n=>Math.round(n).toLocal
 const addD=(s,n)=>new Date(new Date(s+'T00:00:00Z').getTime()+n*864e5).toISOString().slice(0,10);
 const mn=s=>s?(+s.slice(0,2))*60+(+s.slice(3,5)):null;
 const R=a=>({a,t1:'',t2:'',c:'',p:'',l:'',f:'',n:'',img:''});
-let S={trips:[],cw:[1.5,1.1,1.8,1,1.1,.6,1,.9,1.3,1.1]},cur=null,arch=0,tab='d',kr=0,col=null,unsub=null,first=1,code=localStorage.getItem('tabi_code')||'',tmr={};
+let S={trips:[],cw:[2.2,1.1,1.8,1,1.1,.6,1,.9,1.3,1.1],cwv:2},cur=null,setOpen=0,arch=0,tab='d',kr=0,col=null,unsub=null,first=1,code=localStorage.getItem('tabi_code')||'',tmr={};
 function persist(){try{localStorage.setItem('tabi2',JSON.stringify(S))}catch(e){}}
 function save(t){if(!t)return;t.updated=Date.now();persist();clearTimeout(tmr[t.id]);tmr[t.id]=setTimeout(()=>{if(col)col.doc(t.id).set({json:JSON.stringify(t)}).catch(()=>setSt('同期エラー'))},600)}
 function setSt(m){const e=$('#sy');if(e)e.textContent=m||(col?'同期中 (コード: '+code+')':'この端末のみ保存')}
@@ -80,12 +78,12 @@ function home(){const L=S.trips.filter(t=>!!t.arch==!!arch);
 <div class=cols2><div class=card><h2>新しい日程表</h2><input id=nn placeholder="タイトル" style="width:100%;margin-bottom:6px"><div style="display:flex;gap:6px;margin-bottom:6px"><input id=ns type=date style="flex:1"><input id=ne type=date style="flex:1"></div><select id=nf style="width:100%;margin-bottom:8px"><option value="">チェックリストを複製しない</option>${S.trips.map(t=>`<option value=${t.id}>チェックリスト複製: ${esc(t.name)}</option>`).join('')}</select><button data-act=new>作成</button></div>
 <div class=card><h2>端末間の同期</h2><div class=mut style="margin-bottom:6px">同じ同期コードを入力した端末・ブラウザでデータが連動します(Firebase設定が必要)。</div><input id=sc value="${esc(code)}" placeholder="同期コード(英数字8文字以上推奨)" style="width:100%;margin-bottom:6px"><button data-act=sync>同期開始</button></div></div>
 <div class=tabs><button class="o ${arch?'':'on'}" data-act=tab data-v=0>進行中</button><button class="o ${arch?'on':''}" data-act=tab data-v=1>アーカイブ</button></div><div class=grid>${L.map(card).join('')||'<span class=mut>なし</span>'}</div>`}
-function ckv(t){const lst=(k,n)=>`<div class=card><h2>${n}</h2>${t.ck[k].map((x,i)=>`<div class="ck ${x.d?'d':''}"><input type=checkbox data-k=${k} data-i=${i} data-ckd ${x.d?'checked':''}><input type=text data-k=${k} data-i=${i} data-ckt value="${esc(x.t)}"><button class="o s" data-act=ckdel data-k=${k} data-i=${i}>削除</button></div>`).join('')}<div class=ck><input type=text id=add_${k} placeholder="追加" style="flex:1"><button class=s data-act=ckadd data-k=${k}>追加</button></div></div>`;
+function ckv(t){const lst=(k,n)=>`<div class=card><h2>${n}</h2>${t.ck[k].map((x,i)=>`<div class="ck ${x.d?'d':''}"><input type=checkbox data-k=${k} data-i=${i} data-ckd ${x.d?'checked':''}><input type=text data-k=${k} data-i=${i} data-ckt value="${esc(x.t)}"><button class="o s" data-act=ckmv data-k=${k} data-i=${i} data-v=-1>↑</button><button class="o s" data-act=ckmv data-k=${k} data-i=${i} data-v=1>↓</button><button class="o s" data-act=ckdel data-k=${k} data-i=${i}>削除</button></div>`).join('')}<div class=ck><input type=text id=add_${k} placeholder="追加" style="flex:1"><button class=s data-act=ckadd data-k=${k}>追加</button></div></div>`;
  return`<div class=cols2>${lst('todo','やること')}${lst('bag','持ち物')}</div>`}
 function dayv(t,d,di){const E=effs(d),cn=['日本',...t.cs],opt=(v,blank)=>`${blank?'<option value="">同上</option>':''}${cn.map(c=>`<option ${c==v?'selected':''}>${esc(c)}</option>`).join('')}`;
- return`<section class="card day"><div class=dh><h3>${esc(d.label)}</h3>${d.date?`<input type=date data-dt=${di} value="${d.date}">`:''}<select data-dc=${di}>${opt(d.cc)}</select><span class=mut>基本の国</span><button class="o s" data-act=sort data-d=${di}>時間順に並べ替え</button><b class=sum data-ds=${di}></b></div>
+ return`<section class="card day"><div class=dh><input data-dl=${di} value="${esc(d.label)}" style="width:110px;font-weight:600">${d.date?`<input type=date data-dt=${di} value="${d.date}">`:''}<select data-dc=${di}>${opt(d.cc)}</select><span class=mut>基本の国</span><button class="o s" data-act=sort data-d=${di}>時間順に並べ替え</button><button class="o s" data-act=delday data-d=${di}>この日程を削除</button><b class=sum data-ds=${di}></b></div>
 ${d.rows.map((r,ri)=>{const e=E[ri],o=CT[e],z=tz(t,e),loc=o.c=='JPY';return`<div class=row data-d=${di} data-i=${ri}>
-<div class="f t"><label>時間(現地・例0930)<span class=badge style="display:none"></span></label><div class=tt>${d.date?`<input data-tm=t1 value="${r.t1}" inputmode=numeric maxlength=5 placeholder="開始"><input data-tm=t2 value="${r.t2}" inputmode=numeric maxlength=5 placeholder="終了">`:'<input disabled placeholder="-">'}</div><div class=hint>${jst(r.t1,z,e)}</div></div>
+<div class="f t"><label>時間(現地・5分刻み)<span class=badge style="display:none"></span></label><div class=tt>${d.date?`<input type=time step=300 data-tm=t1 value="${r.t1}" title="開始"><input type=time step=300 data-tm=t2 value="${r.t2}" title="終了">`:'<input disabled placeholder="-">'}</div><div class=hint>${jst(r.t1,z,e)}</div></div>
 <div class="f c"><label>国</label><select data-rc>${opt(r.c,1)}</select></div>
 <div class="f a"><label>内容</label><input data-f=a value="${esc(r.a)}"></div>
 <div class="f p"><label>予定(円)</label><input data-f=p type=number inputmode=decimal value="${r.p}"></div>
@@ -104,19 +102,19 @@ function tv(t){const sel=t.cs;
  const wd=['時間','国','内容','予定','結果','手数料','円','差額','備考','画像'].map((n,i)=>`<label class=mut>${n}<input type=range min=.4 max=3 step=.1 value=${S.cw[i]} data-w=${i}></label> `).join('');
  return`<h1><button class=o data-act=back>戻る</button> <input data-tf=name value="${esc(t.name)}" style="width:min(60%,320px);font-size:15px"><span class=sy id=sy></span></h1>
 <div class=tabs><button class="o ${tab=='d'?'on':''}" data-act=tb data-v=d>日程・予算</button><button class="o ${tab=='c'?'on':''}" data-act=tb data-v=c>チェックリスト</button></div>
-${tab=='c'?ckv(t):`<div class=card><h2>訪れる国(あいうえお順・複数選択)</h2><div class=tabs>${kt}</div><div class=tabs>${chips}</div><div style="margin-top:6px">${sel.map(n=>`<span class=badge style="padding:2px 8px;font-size:12px">${esc(n)}</span> `).join('')||'<span class=mut>未選択</span>'}</div><div style="margin-top:8px">${ri}</div>
+${tab=='c'?ckv(t):`<details class=card id=setp ${setOpen?'open':''}><summary style="cursor:pointer;font-weight:600">国・レート・手数料の設定 (クリックで開閉)</summary><h2 style="margin-top:10px">訪れる国(あいうえお順・複数選択)</h2><div class=tabs>${kt}</div><div class=tabs>${chips}</div><div style="margin-top:6px">${sel.map(n=>`<span class=badge style="padding:2px 8px;font-size:12px">${esc(n)}</span> `).join('')||'<span class=mut>未選択</span>'}</div><div style="margin-top:8px">${ri}</div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><button data-act=rates>最新レートを取得</button><span class=mut id=rtm>${t.rt?'最終取得 '+new Date(t.rt).toLocaleString('ja-JP'):'未取得'}</span><label class=mut>カード手数料(%) 初期値<input data-tf=fee type=number step=.1 value="${t.fee}" style="width:70px;display:inline-block"></label></div>
-<details style="margin-top:8px"><summary class=mut>項目の幅調整</summary>${wd}</details></div>${t.days.map((d,i)=>dayv(t,d,i)).join('')}<button class=o data-act=addday>日程を追加</button><div class=card id=tt style="position:sticky;bottom:0;margin-top:12px"></div>`}`}
+<details style="margin-top:8px"><summary class=mut>項目の幅調整</summary>${wd}</details></details>${t.days.map((d,i)=>dayv(t,d,i)).join('')}<button class=o data-act=addday>日程を追加</button><div class=card id=tt style="position:sticky;bottom:0;margin-top:12px;z-index:3;border-color:var(--ac)"></div>`}`}
 function render(){$('#app').innerHTML=cur?tv(cur):home();document.documentElement.style.setProperty('--cols',S.cw.map(w=>`minmax(0,${w}fr)`).join(' ')+' 30px');recalc();live();setSt()}
 function recalc(){const t=cur;if(!t||tab!='d')return;t.days.forEach((d,di)=>{const E=effs(d);let p=0,r=0;d.rows.forEach((x,ri)=>{const y=yen(t,x,E[ri]);p+=+x.p||0;r+=y||0;const a=$(`[data-y="${di},${ri}"]`),b=$(`[data-df="${di},${ri}"]`);if(a)a.value=y==null?'':fmt(y);if(b)b.value=y==null||x.p===''?'':fmt((+x.p)-y)});const e=$(`[data-ds="${di}"]`);if(e)e.textContent=`予算 ${fmt(p)}円 / 使用 ${fmt(r)}円`});
- const[P,Rr]=tot(t),e=$('#tt');if(e)e.innerHTML=`合計　予算 <b>${fmt(P)}円</b>　使用 <b>${fmt(Rr)}円</b>　差額 <b>${fmt(P-Rr)}円</b>`}
+ const[P,Rr]=tot(t),e=$('#tt');if(e){const rs=[...new Set(t.cs.map(n=>CT[n].c))].filter(c=>c!='JPY').map(c=>`${c} 1=${t.rates[c]||'未取得'}円`).join('　');e.innerHTML=`合計　予算 <b>${fmt(P)}円</b>　使用 <b>${fmt(Rr)}円</b>　差額 <b>${fmt(P-Rr)}円</b>`+(rs?`<br><span class=mut>レート　${rs}</span>`:'')}}
 function live(){const cd=$('#cd');if(cd){const b=nextTrip();if(b){const m=Math.floor((b.ms-Date.now())/6e4),[P,Rr]=tot(b.t),[a,c]=ckc(b.t);cd.textContent=`${b.t.name}　あと ${m/1440|0}日 ${pad((m%1440)/60|0)}時間 ${pad(m%60)}分`;const lt=new Date(b.ms+(9+tz(b.t,b.e))*36e5);$('#nx').innerHTML=`<div><span class=mut>出発(日本時間)</span><b>${new Date(b.ms+9*36e5).toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>出発(現地時間)</span><b>${lt.toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>最初の予定</span><b>${b.r?esc(b.r.a||'-'):'未設定'}</b></div><div><span class=mut>期間</span><b>${b.t.start} - ${b.t.end}</b></div><div><span class=mut>予算</span><b>${fmt(P)}円</b></div><div><span class=mut>使用済み</span><b>${fmt(Rr)}円</b></div><div><span class=mut>チェックリスト</span><b>${a} / ${c}</b></div><div><span class=mut>訪問国</span><b>${b.t.cs.map(esc).join(' ')||'未設定'}</b></div>`;$('#cns').innerHTML=tsum(b.t)}else{cd.textContent='日程表を作成してください';$('#nx').innerHTML='';$('#cns').innerHTML=''}}
  $$('[data-lt]').forEach(e=>{const d=new Date(Date.now()+(9+ +e.dataset.lt)*36e5);e.textContent=d.toISOString().slice(5,16).replace('T',' ')});
  if(!cur||tab!='d')return;cur.days.forEach((d,di)=>{if(!d.date)return;const E=effs(d);d.rows.forEach((r,ri)=>{const el=$(`.row[data-d="${di}"][data-i="${ri}"]`);if(!el)return;const[nd,nm]=nowLocal(tz(cur,E[ri])),s=mn(r.t1);let e=mn(r.t2);if(e==null||(s!=null&&e<=s)){const nx=d.rows.slice(ri+1).find(x=>x.t1);e=nx?mn(nx.t1):1440}
   let st='';if(d.date<nd)st='past';else if(d.date==nd&&s!=null){if(nm>=e)st='past';else if(nm>=s)st='now'}
   el.classList.toggle('past',st=='past');el.classList.toggle('now',st=='now');const b=$('.badge',el);b.style.display=st?'inline':'none';b.textContent=st=='now'?'NOW':'済'})})}
 async function getRates(t,force){const need=[...new Set(t.cs.map(n=>CT[n].c))].filter(c=>c!='JPY');if(!need.length)return;if(!force&&t.rt&&Date.now()-t.rt<36e5)return;
- try{const j=await (await fetch('https://open.er-api.com/v6/latest/JPY')).json();if(j.result!='success')throw 0;need.forEach(c=>{if(j.rates[c])t.rates[c]=+(1/j.rates[c]).toPrecision(5)});t.rt=Date.now();save(t);render()}catch(e){const m=$('#rtm');if(m)m.textContent='レート取得に失敗しました(手入力も可能)'}}
+ try{const j=await (await fetch('https://open.er-api.com/v6/latest/JPY')).json();if(j.result!='success')throw 0;need.forEach(c=>{if(j.rates[c])t.rates[c]=+(1/j.rates[c]).toPrecision(5)});t.rt=Date.now();save(t);const a=document.activeElement;if(a&&/INPUT|SELECT/.test(a.tagName)){recalc();const m=$('#rtm');if(m)m.textContent='最終取得 '+new Date(t.rt).toLocaleString('ja-JP')}else render()}catch(e){const m=$('#rtm');if(m)m.textContent='レート取得に失敗しました(手入力も可能)'}}
 function shrink(f){return new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,480/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.55))};i.src=URL.createObjectURL(f)})}
 const ld=u=>new Promise((r,j)=>{const s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s)});
 async function fbStart(){if(!FBCFG||!code){setSt();return}try{if(!window.firebase){await ld('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');await ld('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js')}
@@ -136,13 +134,13 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
  else if(a=='addrow'){cur.days[d].rows.push(R(''));save(cur)}else if(a=='delrow'){cur.days[d].rows.splice(i,1);save(cur)}
  else if(a=='sort'){const E=effs(cur.days[d]);cur.days[d].rows.forEach((r,x)=>r.c=r.c||(x?'':''));const rs=cur.days[d].rows.map((r,x)=>({...r,c:E[x]}));rs.sort((p,q)=>(p.t1||'99:99')<(q.t1||'99:99')?-1:1);cur.days[d].rows=rs;save(cur)}
  else if(a=='addday'){cur.days.push({id:uid(),label:'追加日',date:cur.end,cc:'日本',rows:[R('')]});save(cur)}
- else if(a=='ckadd'){const v=$('#add_'+k).value.trim();if(v){cur.ck[k].push({t:v,d:false});save(cur)}}else if(a=='ckdel'){cur.ck[k].splice(i,1);save(cur)}
+ else if(a=='ckadd'){const v=$('#add_'+k).value.trim();if(v){cur.ck[k].push({t:v,d:false});save(cur)}}else if(a=='ckdel'){cur.ck[k].splice(i,1);save(cur)}else if(a=='ckmv'){const l=cur.ck[k],j=i+ +b.dataset.v;if(j>=0&&j<l.length){[l[i],l[j]]=[l[j],l[i]];save(cur)}}else if(a=='delday'){if(!confirm('この日程を削除しますか?'))return;cur.days.splice(d,1);save(cur)}
  render()});
 document.addEventListener('input',e=>{const el=e.target,q=el.dataset;
  if(q.w!=null){S.cw[+q.w]=+el.value;persist();render();return}
  if(q.f){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.f]=el.value;recalc();save(cur)}
  else if(q.g=='r'){cur.rates[q.cur]=+el.value;recalc();save(cur)}else if(q.tf){cur[q.tf]=el.value;recalc();save(cur)}
- else if(q.ckt!=null){cur.ck[q.k][+q.i].t=el.value;save(cur)}});
+ else if(q.ckt!=null){cur.ck[q.k][+q.i].t=el.value;save(cur)}else if(q.tm){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.tm]=el.value;save(cur)}else if(q.dl!=null){cur.days[+q.dl].label=el.value;save(cur)}});
 document.addEventListener('change',e=>{const el=e.target,q=el.dataset,r=el.closest('.row');
  if(q.tm){const x=cur.days[+r.dataset.d].rows[+r.dataset.i];x[q.tm]=nt(el.value);save(cur);render()}
  else if(q.rc!=null){cur.days[+r.dataset.d].rows[+r.dataset.i].c=el.value;save(cur);render()}
@@ -150,6 +148,7 @@ document.addEventListener('change',e=>{const el=e.target,q=el.dataset,r=el.close
  else if(q.g=='z'){cur.tz[q.n]=+el.value;save(cur);render()}else if(q.g=='r'){render()}
  else if(q.ckd!=null){cur.ck[q.k][+q.i].d=el.checked;save(cur);render()}
  else if(q.up){const[d,i]=q.up.split(',').map(Number);if(el.files[0])shrink(el.files[0]).then(u=>{cur.days[d].rows[i].img=u;save(cur);render()})}});
-try{const o=JSON.parse(localStorage.getItem('tabi2')||'{}');S={trips:o.trips||[],cw:o.cw||S.cw}}catch(e){}
+document.addEventListener('toggle',e=>{if(e.target.id=='setp')setOpen=e.target.open},true);
+try{const o=JSON.parse(localStorage.getItem('tabi2')||'{}');S={trips:o.trips||[],cw:o.cwv==2&&o.cw?o.cw:S.cw,cwv:2}}catch(e){}
 render();setInterval(live,30000);fbStart();{const n=nextTrip();if(n)getRates(n.t)}
 </script></body></html>
