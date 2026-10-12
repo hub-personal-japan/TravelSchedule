@@ -1,111 +1,155 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>旅ノート</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap">
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>TRAVEL NOTE</title>
 <style>
 *{box-sizing:border-box}
-:root{--ink:#2b2d42;--mut:#6b6f8a;--card:rgba(255,255,255,.93);--in:#fff;--pk:#ff5d8f;--bl:#27b5ea;--yl:#ffd23f;--gr:#2fcf8d;--bg:linear-gradient(160deg,#ffd6e8,#fff1c9 45%,#c9f0ff);--cols:150px 200px 110px 110px 100px 150px 90px 34px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--ink:#f4f1ff;--mut:#b4b0d6;--card:rgba(40,36,80,.93);--in:#1d1a3d;--bg:linear-gradient(160deg,#3b1f5e,#1f2a5e 55%,#0f4c6b)}}
-:root[data-theme=dark]{--ink:#f4f1ff;--mut:#b4b0d6;--card:rgba(40,36,80,.93);--in:#1d1a3d;--bg:linear-gradient(160deg,#3b1f5e,#1f2a5e 55%,#0f4c6b)}
-html,body{height:100%;margin:0}
-body{background:var(--bg) fixed;color:var(--ink);font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN',system-ui,sans-serif;overflow-x:hidden;overflow-y:auto}
-body::before{content:'✈️ 🌴 🗼 🧳 🏝️ 🗽 🌺 🍜 🐪 🦘 ✈️ 🌴 🗼 🧳 🏝️ 🗽 🌺 🍜 🐪 🦘 ✈️ 🌴 🗼 🧳 🏝️ 🗽 🌺 🍜';position:fixed;inset:0;font-size:46px;letter-spacing:70px;line-height:150px;opacity:.13;pointer-events:none;overflow:hidden}
-#app{position:relative;max-width:1100px;margin:0 auto;padding:14px}
-@media(min-aspect-ratio:3/2) and (min-width:900px){#app{max-width:1400px}.grid{grid-template-columns:repeat(3,1fr)!important}}
-h1{margin:6px 0;font-size:28px;color:var(--pk)}h2{margin:0 0 8px;font-size:18px}h3{margin:0;font-size:20px;color:var(--pk)}
-.card{background:var(--card);border-radius:22px;padding:14px;box-shadow:0 6px 0 rgba(255,93,143,.25);margin-bottom:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-.grid .card{margin:0}.trip{cursor:pointer}.trip:hover{transform:translateY(-2px)}
-input,select{background:var(--in);color:var(--ink);border:2px solid #ff5d8f55;border-radius:10px;padding:6px 8px;font:inherit;min-width:0;max-width:100%}
-input:focus,select:focus{outline:none;border-color:var(--bl)}
-.btn,.chip{border:0;border-radius:99px;padding:8px 16px;font:inherit;font-weight:700;cursor:pointer;background:var(--pk);color:#fff}
-.chip{background:var(--in);color:var(--ink);border:2px solid #ff5d8f55;padding:5px 12px;margin:2px}.chip.on{background:var(--yl);color:#333;border-color:var(--yl)}
-.btn.s{padding:4px 12px;font-size:13px}.btn.b{background:var(--bl)}.btn.g{background:var(--mut)}
-label{display:inline-block;margin:4px 8px 4px 0;font-size:13px}label input{display:block}
-#cd{background:linear-gradient(135deg,#ff5d8f,#ffb347);color:#fff;font-size:18px}#cd b{font-size:30px}
-.sy,.tz,small,.mut{color:var(--mut);font-size:12px}
-.sc{overflow-x:auto;padding-bottom:6px}
-.row{display:grid;grid-template-columns:var(--cols);gap:4px;align-items:center;padding:4px 0;border-bottom:1px dashed #0002;min-width:max-content}
-.row input:not([type=time]){width:100%}.row input[type=time]{width:calc(50% - 6px)}
-.row.hd{font-size:12px;font-weight:700;color:var(--mut)}
-.row.now{background:#ffd23f55;border-radius:10px;box-shadow:0 0 0 2px var(--yl)}.row.past{opacity:.55}
-.mk{position:absolute;margin-left:-20px}.row>.c{position:relative;padding-left:14px}
-.df{font-weight:700;text-align:right;padding-right:6px}
-.dh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}.sum{margin-left:auto;color:var(--bl)}
-.im{display:flex;gap:4px;align-items:center}.im img{width:40px;height:40px;object-fit:cover;border-radius:8px;cursor:zoom-in}
-.im img.big{position:fixed;inset:5%;width:90%;height:90%;object-fit:contain;z-index:9;background:#000b;cursor:zoom-out}
-.up{cursor:pointer;font-size:20px;margin:0}.x{border:0;background:none;color:var(--mut);cursor:pointer;font-size:16px}
-.rt{display:inline-block;background:var(--in);border-radius:14px;padding:6px 10px;margin:4px;font-size:13px}
-#tt{font-size:16px;position:sticky;bottom:0;z-index:2}
-details.wd{margin:6px 0}.wd label{display:inline-flex;align-items:center;gap:4px}
-@media(max-width:600px){#app{padding:8px}h1{font-size:22px}}
+:root{--bg:#f3f1ed;--card:#fff;--ink:#1e2124;--mut:#7b766e;--ac:#2f3e46;--gd:#a68a56;--line:#e1dcd3;--in:#faf9f6;--now:#f1e9d6}
+@media(prefers-color-scheme:dark){:root{--bg:#15171a;--card:#1e2125;--ink:#ecebe8;--mut:#9a968f;--ac:#c9b27c;--gd:#c9b27c;--line:#33363b;--in:#17191c;--now:#3a3427}}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',Meiryo,system-ui,sans-serif;font-size:14px}
+#app{max-width:1500px;margin:0 auto;padding:16px}
+h1{font-size:15px;letter-spacing:.3em;margin:4px 0 14px;font-weight:600}h2{font-size:15px;margin:0 0 10px;font-weight:600}h3{margin:0;font-size:16px;font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}.grid .card{margin:0}
+input,select{background:var(--in);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:0 8px;font:inherit;min-width:0;height:32px}
+input:focus,select:focus{outline:none;border-color:var(--gd)}
+button{font:inherit;cursor:pointer;border:1px solid var(--ac);background:var(--ac);color:var(--card);border-radius:4px;padding:0 14px;height:32px}
+button.o{background:none;color:var(--ink);border-color:var(--line)}button.o.on{border-color:var(--gd);color:var(--gd);font-weight:700}button.s{height:26px;padding:0 10px;font-size:12px}
+.mut{color:var(--mut);font-size:12px}.sy{color:var(--mut);font-size:12px;margin-left:8px}
+.hero{background:var(--ac);color:var(--card);border-color:var(--ac)}.hero .mut{color:#d8d2c4}
+@media(prefers-color-scheme:dark){.hero{color:#15171a}.hero .mut{color:#3a3427}}
+#cd{font-size:clamp(18px,4.2vw,34px);white-space:nowrap;font-weight:600;margin:4px 0 12px}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.kv div{border-top:1px solid #ffffff44;padding-top:6px;white-space:nowrap}.kv b{display:block;font-size:15px;font-weight:600}
+.cn{border:1px solid var(--line);border-radius:6px;padding:10px;background:var(--card);color:var(--ink);white-space:nowrap}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.day{container-type:inline-size}
+.dh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}.dh .sum{margin-left:auto;font-weight:600}
+.row{display:grid;grid-template-columns:var(--cols);gap:6px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
+.row.now{background:var(--now);box-shadow:0 0 0 3px var(--now)}.row.past{opacity:.5}
+.f{display:flex;flex-direction:column;min-width:0}.f>label{font-size:10px;color:var(--mut);height:14px;white-space:nowrap;overflow:hidden}
+.f input,.f select{width:100%}.tt{display:flex;gap:4px}.tt input{text-align:center}
+.hint{font-size:10px;color:var(--mut);height:16px;line-height:16px;white-space:nowrap;overflow:hidden}
+.i{min-height:62px}.i .pic{display:flex;gap:4px;height:48px;align-items:center}.i img{height:48px;max-width:100%;object-fit:cover;border-radius:4px;cursor:zoom-in}
+.i img.big{position:fixed;inset:4%;width:92%;height:92%;object-fit:contain;background:#000c;z-index:9;cursor:zoom-out;border-radius:0}
+.up{display:inline-flex;align-items:center;justify-content:center;border:1px dashed var(--mut);border-radius:4px;height:32px;padding:0 8px;font-size:12px;cursor:pointer;color:var(--mut);white-space:nowrap}
+.badge{font-size:10px;background:var(--gd);color:#fff;border-radius:3px;padding:0 5px;margin-left:4px}
+.ck{display:flex;gap:6px;align-items:center;margin:4px 0}.ck input[type=text]{flex:1}.ck.d input[type=text]{text-decoration:line-through;color:var(--mut)}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@container (max-width:999px){.row{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"t t c x" "a a a i" "p l f y" "d n n n"}.t{grid-area:t}.c{grid-area:c}.a{grid-area:a}.p{grid-area:p}.l{grid-area:l}.fe{grid-area:f}.y{grid-area:y}.d{grid-area:d}.n{grid-area:n}.i{grid-area:i}.x{grid-area:x}}
+@container (max-width:559px){.row{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"t t" "c x" "a a" "p l" "f y" "d i" "n n"}}
+@media(max-width:700px){#app{padding:8px}.cols2{grid-template-columns:1fr}}
 </style></head><body><div id="app"></div>
 <script>
-const CT={JP:['日本','JPY',1,0,'🗾'],KR:['韓国','KRW',.1161,0,'🇰🇷'],US:['アメリカ東部','USD',159,-14,'🗽'],HI:['ハワイ','USD',159,-19,'🌺'],EG:['エジプト','EGP',3.2,-7,'🐪'],ID:['バリ','IDR',.009,-1,'🌴'],TH:['タイ','THB',4.6,-2,'🛕'],TW:['台湾','TWD',4.9,-1,'🧋'],VN:['ベトナム','VND',.0062,-2,'🍜'],SG:['シンガポール','SGD',117,-1,'🦁'],FR:['フランス','EUR',175,-8,'🗼'],AU:['オーストラリア','AUD',103,1,'🦘']};
+// ===== Firebase設定: Firebaseコンソールの「ウェブアプリ」設定をここに貼り付け(未設定ならこの端末のみ保存) =====
+const FBCFG=null; // 例: {apiKey:"...",authDomain:"xxx.firebaseapp.com",projectId:"xxx",appId:"..."}
+// =====================================================================
+const CL=`あいすらんど|アイスランド|ISK|0;あいるらんど|アイルランド|EUR|0;あめりかとうぶ|アメリカ東部|USD|-5;あめりかちゅうぶ|アメリカ中部|USD|-6;あめりかせいぶ|アメリカ西部|USD|-8;はわい|ハワイ|USD|-10;あらぶしゅちょうこくれんぽう|アラブ首長国連邦|AED|4;あるぜんちん|アルゼンチン|ARS|-3;いぎりす|イギリス|GBP|0;いすらえる|イスラエル|ILS|2;いたりあ|イタリア|EUR|1;いんど|インド|INR|5.5;いんどねしあ|インドネシア(バリ)|IDR|8;うずべきすたん|ウズベキスタン|UZS|5;えじぷと|エジプト|EGP|2;えすとにあ|エストニア|EUR|2;おーすとらりあ|オーストラリア(シドニー)|AUD|10;おーすとりあ|オーストリア|EUR|1;おらんだ|オランダ|EUR|1;かたーる|カタール|QAR|3;かなだ|カナダ(トロント)|CAD|-5;かんぼじあ|カンボジア|KHR|7;かんこく|韓国|KRW|9;ぎりしゃ|ギリシャ|EUR|2;くろあちあ|クロアチア|EUR|1;ぐあむ|グアム|USD|10;けにあ|ケニア|KES|3;こすたりか|コスタリカ|CRC|-6;ころんびあ|コロンビア|COP|-5;さうじあらびあ|サウジアラビア|SAR|3;すいす|スイス|CHF|1;すうぇーでん|スウェーデン|SEK|1;すぺいん|スペイン|EUR|1;すりらんか|スリランカ|LKR|5.5;しんがぽーる|シンガポール|SGD|8;たい|タイ|THB|7;たんざにあ|タンザニア|TZS|3;たいわん|台湾|TWD|8;ちぇこ|チェコ|CZK|1;ちゅうごく|中国|CNY|8;ちり|チリ|CLP|-4;でんまーく|デンマーク|DKK|1;どいつ|ドイツ|EUR|1;とるこ|トルコ|TRY|3;にゅーじーらんど|ニュージーランド|NZD|12;のるうぇー|ノルウェー|NOK|1;ねぱーる|ネパール|NPR|5.75;はんがりー|ハンガリー|HUF|1;ふぃじー|フィジー|FJD|12;ふぃりぴん|フィリピン|PHP|8;ふぃんらんど|フィンランド|EUR|2;ふらんす|フランス|EUR|1;ぶらじる|ブラジル|BRL|-3;べとなむ|ベトナム|VND|7;ぺるー|ペルー|PEN|-5;ぽーらんど|ポーランド|PLN|1;ぽるとがる|ポルトガル|EUR|0;ほんこん|香港|HKD|8;まかお|マカオ|MOP|8;まるた|マルタ|EUR|1;まれーしあ|マレーシア|MYR|8;めきしこ|メキシコ|MXN|-6;もるでぃぶ|モルディブ|MVR|5;もろっこ|モロッコ|MAD|1;もんごる|モンゴル|MNT|8;みなみあふりか|南アフリカ|ZAR|2;みゃんまー|ミャンマー|MMK|6.5;よるだん|ヨルダン|JOD|3;らおす|ラオス|LAK|7;るーまにあ|ルーマニア|RON|2;ろしあ|ロシア|RUB|3`.split(';').map(s=>{const[y,n,c,u]=s.split('|');return{y,n,c,z:+u-9}}).sort((a,b)=>a.y.localeCompare(b.y,'ja'));
+const CT=Object.fromEntries([{y:'にほん',n:'日本',c:'JPY',z:0},...CL].map(o=>[o.n,o]));
+const ROWS=['あいうえお','かきくけこ','さしすせそ','たちつてと','なにぬねの','はひふへほ','まみむめも','やゆよ','らりるれろ','わをん'];
+const rowOf=o=>ROWS.findIndex(r=>r.includes(o.y[0].normalize('NFD')[0]));
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const uid=()=>Math.random().toString(36).slice(2,9),fmt=n=>Math.round(n).toLocaleString('ja-JP');
+const uid=()=>Math.random().toString(36).slice(2,9),fmt=n=>Math.round(n).toLocaleString('ja-JP'),pad=n=>String(n).padStart(2,'0');
 const addD=(s,n)=>new Date(new Date(s+'T00:00:00Z').getTime()+n*864e5).toISOString().slice(0,10);
 const mn=s=>s?(+s.slice(0,2))*60+(+s.slice(3,5)):null;
-const R=a=>({a,t1:'',t2:'',p:'',r:'',n:'',img:''});
-let S={trips:[],cw:[150,200,110,110,100,150,90]},cur=null,arch=0,doc=null,lastJ='',tm;
-const cfg=(t,c)=>c==='JP'?{r:1,z:0}:(t.cfg[c]||(t.cfg[c]={r:CT[c][2],z:CT[c][3]}));
-function mk(name,start,end){const n=Math.max(1,Math.round((new Date(end)-new Date(start))/864e5));
- const days=[{id:uid(),label:'事前準備',date:'',cc:'JP',rows:['航空券','ホテル代','eSIM','海外保険'].map(R)}];
- for(let i=0;i<=n;i++)days.push({id:uid(),label:i==0?'出発日':i==n?'帰国日':'Day'+i,date:addD(start,i),cc:'JP',rows:[R('')]});
- days.push({id:uid(),label:'その他',date:'',cc:'JP',rows:[R('お土産予算'),R('予備費')]});
- return{id:uid(),name,start,end,arch:0,cs:[],cfg:{},days}}
-function tot(t){let P=0,Rr=0;t.days.forEach(d=>{const k=cfg(t,d.cc).r;d.rows.forEach(x=>{P+=(+x.p||0)*k;Rr+=+x.r||0})});return[P,Rr]}
-function dep(t){const d=t.days.find(d=>d.date==t.start),r=d&&d.rows.find(r=>r.t1);return new Date(t.start+'T'+(r?r.t1:'00:00')+':00+09:00')}
-function nextTrip(){const n=Date.now();let b=null;S.trips.filter(t=>!t.arch&&t.start).forEach(t=>{const ts=+dep(t);if(ts>n&&(!b||ts<b.ts))b={t,ts}});return b}
-function jst(t1,z,cc){if(!t1||cc=='JP')return'';const m=mn(t1)-z*60,s=Math.floor(m/1440),k=((m%1440)+1440)%1440;return`日本 ${String(k/60|0).padStart(2,'0')}:${String(k%60).padStart(2,'0')}${s?(s>0?'(翌)':'(前)'):''}`}
-function card(t){const[P,Rr]=tot(t);return`<div class="card trip" data-act=open data-id=${t.id}><h2>${esc(t.name||'無題')}</h2><div class=mut>${t.start} → ${t.end}</div><div style="font-size:24px">${t.cs.map(c=>CT[c][4]).join(' ')||'🗾'}</div><div>予算 <b>¥${fmt(P)}</b><br>使用 <b>¥${fmt(Rr)}</b></div><div style="margin-top:8px"><button class="btn s b" data-act=arch data-id=${t.id}>${t.arch?'復元':'アーカイブ'}</button> <button class="btn s g" data-act=del data-id=${t.id}>削除</button></div></div>`}
+const R=a=>({a,t1:'',t2:'',c:'',p:'',l:'',f:'',n:'',img:''});
+let S={trips:[],cw:[1.5,1.1,1.8,1,1.1,.6,1,.9,1.3,1.1]},cur=null,arch=0,tab='d',kr=0,col=null,unsub=null,first=1,code=localStorage.getItem('tabi_code')||'',tmr={};
+function persist(){try{localStorage.setItem('tabi2',JSON.stringify(S))}catch(e){}}
+function save(t){if(!t)return;t.updated=Date.now();persist();clearTimeout(tmr[t.id]);tmr[t.id]=setTimeout(()=>{if(col)col.doc(t.id).set({json:JSON.stringify(t)}).catch(()=>setSt('同期エラー'))},600)}
+function setSt(m){const e=$('#sy');if(e)e.textContent=m||(col?'同期中 (コード: '+code+')':'この端末のみ保存')}
+const rate=(t,c)=>c=='JPY'?1:(t.rates[c]||0);
+function effs(d){let c=d.cc||'日本';return d.rows.map(r=>c=r.c||c)}
+const tz=(t,n)=>t.tz&&t.tz[n]!=null?t.tz[n]:CT[n].z;
+function yen(t,r,e){if(r.l===''||r.l==null)return null;const o=CT[e];return o.c=='JPY'?+r.l:+r.l*rate(t,o.c)*(1+((r.f===''?+t.fee:+r.f)||0)/100)}
+function tot(t){let P=0,Rr=0;t.days.forEach(d=>{const E=effs(d);d.rows.forEach((r,i)=>{P+=+r.p||0;Rr+=yen(t,r,E[i])||0})});return[P,Rr]}
+function ckc(t){const a=[...t.ck.todo,...t.ck.bag];return[a.filter(x=>x.d).length,a.length]}
+function mkTrip(name,s,e,from){const n=Math.max(1,Math.round((new Date(e)-new Date(s))/864e5)),days=[{id:uid(),label:'事前準備',date:'',cc:'日本',rows:['航空券','ホテル代','eSIM','海外保険'].map(R)}];
+ for(let i=0;i<=n;i++)days.push({id:uid(),label:i==0?'出発日':i==n?'帰国日':'Day'+i,date:addD(s,i),cc:'日本',rows:[R('')]});
+ days.push({id:uid(),label:'その他',date:'',cc:'日本',rows:[R('お土産'),R('予備費')]});
+ const src=S.trips.find(x=>x.id==from),cp=a=>(a||[]).map(x=>({t:x.t,d:false}));
+ return{id:uid(),name,start:s,end:e,arch:0,cs:[],rates:{},tz:{},rt:0,fee:0,days,ck:src?{todo:cp(src.ck.todo),bag:cp(src.ck.bag)}:{todo:[],bag:[]},updated:Date.now()}}
+function dep(t){let best=null;t.days.filter(d=>d.date).forEach(d=>{const E=effs(d);d.rows.forEach((r,i)=>{if(!r.t1)return;const z=tz(t,E[i]),ms=Date.parse(d.date+'T'+r.t1+':00Z')-(9+z)*36e5;if(!best||ms<best.ms)best={ms,r,d,e:E[i]}})});
+ return best||{ms:Date.parse(t.start+'T00:00:00+09:00'),r:null,d:null,e:'日本'}}
+function nextTrip(){let b=null;S.trips.filter(t=>!t.arch&&t.start).forEach(t=>{const d=dep(t);if(d.ms>Date.now()&&(!b||d.ms<b.ms))b={t,...d}});return b}
+function jst(t1,z,e){if(!t1||e=='日本')return'';const m=mn(t1)-z*60,s=Math.floor(m/1440),k=((m%1440)+1440)%1440;return`日本 ${pad(k/60|0)}:${pad(k%60)}${s?(s>0?'(翌)':'(前)'):''}`}
+function nt(s){const d=String(s).replace(/\D/g,'');if(!d)return'';let h,m;if(d.length<=2){h=+d;m=0}else{h=+d.slice(0,-2);m=+d.slice(-2)}m=Math.round(m/5)*5;if(m>=60){m=0;h++}return pad(h%24)+':'+pad(m)}
+function nowLocal(z){const d=new Date(Date.now()+(9+z)*36e5);return[d.toISOString().slice(0,10),d.getUTCHours()*60+d.getUTCMinutes()]}
+const tsum=t=>t.cs.map(n=>`<div class=cn><b>${esc(n)}</b>　${CT[n].c}<br><span class=mut>${CT[n].c=='JPY'?'':'1'+CT[n].c+' = '+(rate(t,CT[n].c)||'未取得')+' 円'}</span><br><span class=mut>時差 ${tz(t,n)>=0?'+':''}${tz(t,n)}時間　現地 <span data-lt="${tz(t,n)}"></span></span></div>`).join('');
+function card(t){const[P,Rr]=tot(t),[a,b]=ckc(t);return`<div class=card data-act=open data-id=${t.id} style="cursor:pointer"><h2>${esc(t.name||'無題')}</h2><div class=mut>${t.start} - ${t.end}　${t.cs.map(esc).join(' / ')||'国未設定'}</div><div style="margin:8px 0">予算 <b>${fmt(P)}円</b>　使用 <b>${fmt(Rr)}円</b><br>チェック ${a}/${b}</div><button class="o s" data-act=arch data-id=${t.id}>${t.arch?'復元':'アーカイブ'}</button> <button class="o s" data-act=del data-id=${t.id}>削除</button></div>`}
 function home(){const L=S.trips.filter(t=>!!t.arch==!!arch);
- return`<h1>✈️ 旅ノート <button class=chip data-act=theme>🌓</button></h1><div class=sy id=sy></div>
-<div class=grid style="margin:10px 0"><div class=card id=cd></div><div class=card><h2>🆕 新しい日程表</h2><input id=nn placeholder="例: 2027.4 バリ旅" style="width:100%"><label>出発日<input id=ns type=date></label><label>帰国日<input id=ne type=date></label><br><button class=btn data-act=new>作成</button></div></div>
-<div><button class="chip ${arch?'':'on'}" data-act=tab data-v=0>🧳 進行中</button><button class="chip ${arch?'on':''}" data-act=tab data-v=1>📦 アーカイブ</button></div>
-<div class=grid style="margin-top:8px">${L.map(card).join('')||'<p class=mut>まだありません</p>'}</div>`}
-function tv(t){
- const chips=Object.keys(CT).filter(c=>c!='JP').map(c=>`<button class="chip ${t.cs.includes(c)?'on':''}" data-act=tgl data-c=${c}>${CT[c][4]} ${CT[c][0]}</button>`).join('');
- const rt=t.cs.map(c=>{const g=cfg(t,c);return`<div class=rt><b>${CT[c][4]} ${CT[c][1]}</b> 1=<input data-g=r data-c=${c} type=number step=any value="${g.r}" style="width:84px">円　時差<input data-g=z data-c=${c} type=number step=1 value="${g.z}" style="width:56px">h</div>`}).join('');
- const wd=['時間','行動','予定','結果','差額','備考','画像'].map((n,i)=>`<label>${n}<input type=range min=50 max=400 value=${S.cw[i]} data-w=${i}></label>`).join('');
- const days=t.days.map((d,di)=>{const g=cfg(t,d.cc),cu=CT[d.cc][1];
-  return`<section class=card><div class=dh><h3>${esc(d.label)}</h3>${d.date?`<input type=date data-dt=${di} value="${d.date}">`:''}<select data-df=cc data-d=${di}>${['JP',...t.cs].map(c=>`<option value=${c} ${c==d.cc?'selected':''}>${CT[c][4]} ${CT[c][0]}</option>`).join('')}</select><span class=tz>${d.cc!='JP'?`時差${g.z>=0?'+':''}${g.z}h・1${cu}=${g.r}円`:''}</span><b class=sum data-ds=${di}></b></div>
-<div class=sc><div class="row hd"><span>時間(現地・5分刻み)</span><span>行動予定</span><span>費用予定(${cu})</span><span>支払結果(円)</span><span>差額(円)</span><span>備考</span><span>画像</span><span></span></div>
-${d.rows.map((r,ri)=>`<div class=row data-d=${di} data-i=${ri}><div class=c><span class=mk></span>${d.date?`<input type=time step=300 data-f=t1 value="${r.t1}">–<input type=time step=300 data-f=t2 value="${r.t2}">`:''}<small>${jst(r.t1,g.z,d.cc)}</small></div><input data-f=a value="${esc(r.a)}" placeholder="行動・項目"><input data-f=p type=number inputmode=decimal value="${r.p}"><input data-f=r type=number inputmode=decimal value="${r.r}"><span class=df data-diff="${di},${ri}"></span><input data-f=n value="${esc(r.n)}"><div class=im>${r.img?`<img src="${r.img}" data-act=zoom>`:''}<label class=up>📷<input type=file accept="image/*" hidden data-up="${di},${ri}"></label></div><button class=x data-act=delrow data-d=${di} data-i=${ri}>✕</button></div>`).join('')}</div>
-<button class="btn s" data-act=addrow data-d=${di}>＋行を追加</button></section>`}).join('');
- return`<h1><button class=chip data-act=back>← 戻る</button> <input data-tf=name value="${esc(t.name)}" style="font-size:20px;width:min(100%,360px)"> <button class=chip data-act=theme>🌓</button></h1>
-<div class=card><h2>🌏 訪れる国(複数選択)</h2>${chips}<div>${rt}</div><div class=mut>※レートは円換算(手入力・編集可)。時差は「現地−日本」の時間。</div><details class=wd><summary>📐 列の幅調整</summary>${wd}</details></div>${days}<div class=card id=tt></div>`}
-function render(){$('#app').innerHTML=cur?tv(cur):home();setCols();recalc();live();const s=$('#sy');if(s)s.textContent=doc?'☁️ データはPC・スマホ間で同期中':'📱 この端末のみ保存(同期はサインイン時)'}
-function setCols(){document.documentElement.style.setProperty('--cols',S.cw.map(w=>w+'px').join(' ')+' 34px')}
-function recalc(){const t=cur;if(!t)return;t.days.forEach((d,di)=>{const k=cfg(t,d.cc).r;let p=0,r=0;d.rows.forEach((x,ri)=>{const pj=(+x.p||0)*k;p+=pj;r+=+x.r||0;const e=$(`[data-diff="${di},${ri}"]`);if(e)e.textContent=x.r!==''?fmt(pj-(+x.r)):''});const e=$(`[data-ds="${di}"]`);if(e)e.textContent=`予算 ¥${fmt(p)} / 使用 ¥${fmt(r)}`});
- const[P,Rr]=tot(t),e=$('#tt');if(e)e.innerHTML=`💰 合計　予算 <b>¥${fmt(P)}</b>　使用 <b>¥${fmt(Rr)}</b>　差額 <b>¥${fmt(P-Rr)}</b>`}
-function nowIn(z){const d=new Date(Date.now()+(9+z)*36e5);return[d.toISOString().slice(0,10),d.getUTCHours()*60+d.getUTCMinutes()]}
-function live(){const cd=$('#cd');if(cd){const b=nextTrip();if(b){const m=Math.floor((b.ts-Date.now())/6e4);cd.innerHTML=`🛫 次の渡航先：<b>${esc(b.t.name)}</b> ${b.t.cs.map(c=>CT[c][4]).join('')}<br>あと <b>${m/1440|0}</b>日 <b>${(m%1440)/60|0}</b>時間 <b>${m%60}</b>分`}else cd.innerHTML='🌈 日程表を作って次の旅を決めよう!'}
- if(!cur)return;cur.days.forEach((d,di)=>{if(!d.date)return;const[nd,nm]=nowIn(cfg(cur,d.cc).z);d.rows.forEach((r,ri)=>{const el=$(`.row[data-d="${di}"][data-i="${ri}"]`);if(!el)return;const s=mn(r.t1);let e=mn(r.t2);if(e==null||(s!=null&&e<=s)){const nx=d.rows.slice(ri+1).find(x=>x.t1);e=nx?mn(nx.t1):1440}
+ return`<h1>TRAVEL NOTE<span class=sy id=sy></span></h1>
+<div class="card hero"><div class=mut>次の渡航先</div><div id=cd></div><div class=kv id=nx></div></div>
+<div class=grid id=cns style="margin-bottom:12px"></div>
+<div class=cols2><div class=card><h2>新しい日程表</h2><input id=nn placeholder="タイトル" style="width:100%;margin-bottom:6px"><div style="display:flex;gap:6px;margin-bottom:6px"><input id=ns type=date style="flex:1"><input id=ne type=date style="flex:1"></div><select id=nf style="width:100%;margin-bottom:8px"><option value="">チェックリストを複製しない</option>${S.trips.map(t=>`<option value=${t.id}>チェックリスト複製: ${esc(t.name)}</option>`).join('')}</select><button data-act=new>作成</button></div>
+<div class=card><h2>端末間の同期</h2><div class=mut style="margin-bottom:6px">同じ同期コードを入力した端末・ブラウザでデータが連動します(Firebase設定が必要)。</div><input id=sc value="${esc(code)}" placeholder="同期コード(英数字8文字以上推奨)" style="width:100%;margin-bottom:6px"><button data-act=sync>同期開始</button></div></div>
+<div class=tabs><button class="o ${arch?'':'on'}" data-act=tab data-v=0>進行中</button><button class="o ${arch?'on':''}" data-act=tab data-v=1>アーカイブ</button></div><div class=grid>${L.map(card).join('')||'<span class=mut>なし</span>'}</div>`}
+function ckv(t){const lst=(k,n)=>`<div class=card><h2>${n}</h2>${t.ck[k].map((x,i)=>`<div class="ck ${x.d?'d':''}"><input type=checkbox data-k=${k} data-i=${i} data-ckd ${x.d?'checked':''}><input type=text data-k=${k} data-i=${i} data-ckt value="${esc(x.t)}"><button class="o s" data-act=ckdel data-k=${k} data-i=${i}>削除</button></div>`).join('')}<div class=ck><input type=text id=add_${k} placeholder="追加" style="flex:1"><button class=s data-act=ckadd data-k=${k}>追加</button></div></div>`;
+ return`<div class=cols2>${lst('todo','やること')}${lst('bag','持ち物')}</div>`}
+function dayv(t,d,di){const E=effs(d),cn=['日本',...t.cs],opt=(v,blank)=>`${blank?'<option value="">同上</option>':''}${cn.map(c=>`<option ${c==v?'selected':''}>${esc(c)}</option>`).join('')}`;
+ return`<section class="card day"><div class=dh><h3>${esc(d.label)}</h3>${d.date?`<input type=date data-dt=${di} value="${d.date}">`:''}<select data-dc=${di}>${opt(d.cc)}</select><span class=mut>基本の国</span><button class="o s" data-act=sort data-d=${di}>時間順に並べ替え</button><b class=sum data-ds=${di}></b></div>
+${d.rows.map((r,ri)=>{const e=E[ri],o=CT[e],z=tz(t,e),loc=o.c=='JPY';return`<div class=row data-d=${di} data-i=${ri}>
+<div class="f t"><label>時間(現地・例0930)<span class=badge style="display:none"></span></label><div class=tt>${d.date?`<input data-tm=t1 value="${r.t1}" inputmode=numeric maxlength=5 placeholder="開始"><input data-tm=t2 value="${r.t2}" inputmode=numeric maxlength=5 placeholder="終了">`:'<input disabled placeholder="-">'}</div><div class=hint>${jst(r.t1,z,e)}</div></div>
+<div class="f c"><label>国</label><select data-rc>${opt(r.c,1)}</select></div>
+<div class="f a"><label>内容</label><input data-f=a value="${esc(r.a)}"></div>
+<div class="f p"><label>予定(円)</label><input data-f=p type=number inputmode=decimal value="${r.p}"></div>
+<div class="f l"><label>結果(${o.c})</label><input data-f=l type=number inputmode=decimal value="${r.l}"></div>
+<div class="f fe"><label>手数料%</label><input data-f=f type=number step=any inputmode=decimal value="${r.f}" placeholder="${t.fee}" ${loc?'disabled':''}></div>
+<div class="f y"><label>結果(円)</label><input data-y="${di},${ri}" disabled></div>
+<div class="f d"><label>差額(円)</label><input data-df="${di},${ri}" disabled></div>
+<div class="f n"><label>備考</label><input data-f=n value="${esc(r.n)}"></div>
+<div class="f i"><label>画像</label><div class=pic>${r.img?`<img src="${r.img}" data-act=zoom>`:''}<label class=up style="height:32px">${r.img?'変更':'追加'}<input type=file accept="image/*" hidden data-up="${di},${ri}"></label></div></div>
+<div class="f x"><label>&nbsp;</label><button class=o data-act=delrow data-d=${di} data-i=${ri}>x</button></div></div>`}).join('')}
+<div style="margin-top:8px"><button class="o s" data-act=addrow data-d=${di}>行を追加</button></div></section>`}
+function tv(t){const sel=t.cs;
+ const kt=ROWS.map((r,i)=>`<button class="o s ${kr==i?'on':''}" data-act=kr data-v=${i}>${r[0]}行</button>`).join('');
+ const chips=CL.filter(o=>rowOf(o)==kr).map(o=>`<button class="o s ${sel.includes(o.n)?'on':''}" data-act=tgl data-n="${esc(o.n)}">${esc(o.n)}</button>`).join(' ');
+ const ri=sel.map(n=>{const o=CT[n];return`<div class=rt style="display:inline-block;margin:4px 8px 4px 0"><b>${esc(n)}</b> ${o.c} 1=<input data-g=r data-cur=${o.c} type=number step=any value="${t.rates[o.c]||''}" style="width:90px">円 時差<input data-g=z data-n="${esc(n)}" type=number step=.25 value="${tz(t,n)}" style="width:60px">h</div>`}).join('');
+ const wd=['時間','国','内容','予定','結果','手数料','円','差額','備考','画像'].map((n,i)=>`<label class=mut>${n}<input type=range min=.4 max=3 step=.1 value=${S.cw[i]} data-w=${i}></label> `).join('');
+ return`<h1><button class=o data-act=back>戻る</button> <input data-tf=name value="${esc(t.name)}" style="width:min(60%,320px);font-size:15px"><span class=sy id=sy></span></h1>
+<div class=tabs><button class="o ${tab=='d'?'on':''}" data-act=tb data-v=d>日程・予算</button><button class="o ${tab=='c'?'on':''}" data-act=tb data-v=c>チェックリスト</button></div>
+${tab=='c'?ckv(t):`<div class=card><h2>訪れる国(あいうえお順・複数選択)</h2><div class=tabs>${kt}</div><div class=tabs>${chips}</div><div style="margin-top:6px">${sel.map(n=>`<span class=badge style="padding:2px 8px;font-size:12px">${esc(n)}</span> `).join('')||'<span class=mut>未選択</span>'}</div><div style="margin-top:8px">${ri}</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><button data-act=rates>最新レートを取得</button><span class=mut id=rtm>${t.rt?'最終取得 '+new Date(t.rt).toLocaleString('ja-JP'):'未取得'}</span><label class=mut>カード手数料(%) 初期値<input data-tf=fee type=number step=.1 value="${t.fee}" style="width:70px;display:inline-block"></label></div>
+<details style="margin-top:8px"><summary class=mut>項目の幅調整</summary>${wd}</details></div>${t.days.map((d,i)=>dayv(t,d,i)).join('')}<button class=o data-act=addday>日程を追加</button><div class=card id=tt style="position:sticky;bottom:0;margin-top:12px"></div>`}`}
+function render(){$('#app').innerHTML=cur?tv(cur):home();document.documentElement.style.setProperty('--cols',S.cw.map(w=>`minmax(0,${w}fr)`).join(' ')+' 30px');recalc();live();setSt()}
+function recalc(){const t=cur;if(!t||tab!='d')return;t.days.forEach((d,di)=>{const E=effs(d);let p=0,r=0;d.rows.forEach((x,ri)=>{const y=yen(t,x,E[ri]);p+=+x.p||0;r+=y||0;const a=$(`[data-y="${di},${ri}"]`),b=$(`[data-df="${di},${ri}"]`);if(a)a.value=y==null?'':fmt(y);if(b)b.value=y==null||x.p===''?'':fmt((+x.p)-y)});const e=$(`[data-ds="${di}"]`);if(e)e.textContent=`予算 ${fmt(p)}円 / 使用 ${fmt(r)}円`});
+ const[P,Rr]=tot(t),e=$('#tt');if(e)e.innerHTML=`合計　予算 <b>${fmt(P)}円</b>　使用 <b>${fmt(Rr)}円</b>　差額 <b>${fmt(P-Rr)}円</b>`}
+function live(){const cd=$('#cd');if(cd){const b=nextTrip();if(b){const m=Math.floor((b.ms-Date.now())/6e4),[P,Rr]=tot(b.t),[a,c]=ckc(b.t);cd.textContent=`${b.t.name}　あと ${m/1440|0}日 ${pad((m%1440)/60|0)}時間 ${pad(m%60)}分`;const lt=new Date(b.ms+(9+tz(b.t,b.e))*36e5);$('#nx').innerHTML=`<div><span class=mut>出発(日本時間)</span><b>${new Date(b.ms+9*36e5).toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>出発(現地時間)</span><b>${lt.toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>最初の予定</span><b>${b.r?esc(b.r.a||'-'):'未設定'}</b></div><div><span class=mut>期間</span><b>${b.t.start} - ${b.t.end}</b></div><div><span class=mut>予算</span><b>${fmt(P)}円</b></div><div><span class=mut>使用済み</span><b>${fmt(Rr)}円</b></div><div><span class=mut>チェックリスト</span><b>${a} / ${c}</b></div><div><span class=mut>訪問国</span><b>${b.t.cs.map(esc).join(' ')||'未設定'}</b></div>`;$('#cns').innerHTML=tsum(b.t)}else{cd.textContent='日程表を作成してください';$('#nx').innerHTML='';$('#cns').innerHTML=''}}
+ $$('[data-lt]').forEach(e=>{const d=new Date(Date.now()+(9+ +e.dataset.lt)*36e5);e.textContent=d.toISOString().slice(5,16).replace('T',' ')});
+ if(!cur||tab!='d')return;cur.days.forEach((d,di)=>{if(!d.date)return;const E=effs(d);d.rows.forEach((r,ri)=>{const el=$(`.row[data-d="${di}"][data-i="${ri}"]`);if(!el)return;const[nd,nm]=nowLocal(tz(cur,E[ri])),s=mn(r.t1);let e=mn(r.t2);if(e==null||(s!=null&&e<=s)){const nx=d.rows.slice(ri+1).find(x=>x.t1);e=nx?mn(nx.t1):1440}
   let st='';if(d.date<nd)st='past';else if(d.date==nd&&s!=null){if(nm>=e)st='past';else if(nm>=s)st='now'}
-  el.classList.toggle('past',st=='past');el.classList.toggle('now',st=='now');$('.mk',el).textContent=st=='now'?'📍':st=='past'?'✅':''})})}
-function save(){clearTimeout(tm);tm=setTimeout(()=>{lastJ=JSON.stringify(S);try{localStorage.setItem('tabi',lastJ)}catch(e){}if(doc)doc.set({json:lastJ}).catch(()=>{})},500)}
-function shrink(f){return new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,640/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.6))};i.src=URL.createObjectURL(f)})}
-async function up(f){try{const a=await claude.use('assets');if(a){const r=await a.upload(f);return r.url}}catch(e){}return shrink(f)}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;e.stopPropagation();const a=b.dataset.act,d=+b.dataset.d,i=+b.dataset.i,id=b.dataset.id,T=S.trips.find(t=>t.id==id);
- if(a=='open'){cur=T}else if(a=='back'){cur=null}else if(a=='tab'){arch=+b.dataset.v}
- else if(a=='new'){const s=$('#ns').value||new Date().toISOString().slice(0,10),en=$('#ne').value||addD(s,2);S.trips.push(mk($('#nn').value||'新しい旅',s,en))}
- else if(a=='arch'){T.arch=T.arch?0:1}else if(a=='del'){if(!confirm('削除しますか?'))return;S.trips=S.trips.filter(t=>t.id!=id)}
- else if(a=='tgl'){const c=b.dataset.c,k=cur.cs.indexOf(c);if(k<0)cur.cs.push(c);else{cur.cs.splice(k,1);cur.days.forEach(x=>{if(x.cc==c)x.cc='JP'})}}
- else if(a=='addrow'){cur.days[d].rows.push(R(''))}else if(a=='delrow'){cur.days[d].rows.splice(i,1)}
- else if(a=='zoom'){b.classList.toggle('big');return}
- else if(a=='theme'){const r=document.documentElement;r.dataset.theme=(r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))=='dark'?'light':'dark';return}
- save();render()});
+  el.classList.toggle('past',st=='past');el.classList.toggle('now',st=='now');const b=$('.badge',el);b.style.display=st?'inline':'none';b.textContent=st=='now'?'NOW':'済'})})}
+async function getRates(t,force){const need=[...new Set(t.cs.map(n=>CT[n].c))].filter(c=>c!='JPY');if(!need.length)return;if(!force&&t.rt&&Date.now()-t.rt<36e5)return;
+ try{const j=await (await fetch('https://open.er-api.com/v6/latest/JPY')).json();if(j.result!='success')throw 0;need.forEach(c=>{if(j.rates[c])t.rates[c]=+(1/j.rates[c]).toPrecision(5)});t.rt=Date.now();save(t);render()}catch(e){const m=$('#rtm');if(m)m.textContent='レート取得に失敗しました(手入力も可能)'}}
+function shrink(f){return new Promise(r=>{const i=new Image();i.onload=()=>{const k=Math.min(1,480/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.55))};i.src=URL.createObjectURL(f)})}
+const ld=u=>new Promise((r,j)=>{const s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s)});
+async function fbStart(){if(!FBCFG||!code){setSt();return}try{if(!window.firebase){await ld('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');await ld('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js')}
+ if(!firebase.apps.length)firebase.initializeApp(FBCFG);if(unsub)unsub();col=firebase.firestore().collection('tabi').doc(code).collection('trips');first=1;
+ unsub=col.onSnapshot(sn=>{sn.docChanges().forEach(ch=>{const id=ch.doc.id;if(ch.type=='removed'){S.trips=S.trips.filter(t=>t.id!=id);if(cur&&cur.id==id)cur=null;return}
+  let o;try{o=JSON.parse(ch.doc.data().json)}catch(e){return}const i=S.trips.findIndex(t=>t.id==id);if(i<0)S.trips.push(o);else if((o.updated||0)>(S.trips[i].updated||0)){S.trips[i]=o;if(cur&&cur.id==id)cur=o}});
+  if(first){first=0;S.trips.forEach(t=>{if(!sn.docs.some(d=>d.id==t.id))col.doc(t.id).set({json:JSON.stringify(t)})})}
+  persist();const a=document.activeElement;if(!a||!/INPUT|SELECT/.test(a.tagName))render();else setSt()},()=>setSt('同期エラー(設定・ルールを確認)'));setSt()}catch(e){setSt('Firebase読込に失敗')}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,d=+b.dataset.d,i=+b.dataset.i,id=b.dataset.id,T=S.trips.find(t=>t.id==id),k=b.dataset.k;
+ if(a=='zoom'){b.classList.toggle('big');return}
+ if(a=='open'){cur=T;tab='d';getRates(T)}else if(a=='back')cur=null;else if(a=='tab')arch=+b.dataset.v;else if(a=='tb')tab=b.dataset.v;else if(a=='kr')kr=+b.dataset.v;
+ else if(a=='new'){const s=$('#ns').value||new Date().toISOString().slice(0,10),en=$('#ne').value||addD(s,2),t=mkTrip($('#nn').value||'新しい旅',s,en,$('#nf').value);S.trips.push(t);save(t)}
+ else if(a=='arch'){T.arch=T.arch?0:1;save(T)}else if(a=='del'){if(!confirm('削除しますか?'))return;S.trips=S.trips.filter(t=>t.id!=id);persist();if(col)col.doc(id).delete()}
+ else if(a=='sync'){code=$('#sc').value.trim();localStorage.setItem('tabi_code',code);fbStart();return}
+ else if(a=='tgl'){const n=b.dataset.n,x=cur.cs.indexOf(n);if(x<0)cur.cs.push(n);else{cur.cs.splice(x,1);cur.days.forEach(y=>{if(y.cc==n)y.cc='日本';y.rows.forEach(r=>{if(r.c==n)r.c=''})})}save(cur);getRates(cur)}
+ else if(a=='rates'){getRates(cur,1);return}
+ else if(a=='addrow'){cur.days[d].rows.push(R(''));save(cur)}else if(a=='delrow'){cur.days[d].rows.splice(i,1);save(cur)}
+ else if(a=='sort'){const E=effs(cur.days[d]);cur.days[d].rows.forEach((r,x)=>r.c=r.c||(x?'':''));const rs=cur.days[d].rows.map((r,x)=>({...r,c:E[x]}));rs.sort((p,q)=>(p.t1||'99:99')<(q.t1||'99:99')?-1:1);cur.days[d].rows=rs;save(cur)}
+ else if(a=='addday'){cur.days.push({id:uid(),label:'追加日',date:cur.end,cc:'日本',rows:[R('')]});save(cur)}
+ else if(a=='ckadd'){const v=$('#add_'+k).value.trim();if(v){cur.ck[k].push({t:v,d:false});save(cur)}}else if(a=='ckdel'){cur.ck[k].splice(i,1);save(cur)}
+ render()});
 document.addEventListener('input',e=>{const el=e.target,q=el.dataset;
- if(q.w!=null){S.cw[+q.w]=+el.value;setCols();save()}
- else if(q.f){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.f]=el.value;recalc();live();save()}
- else if(q.g){cfg(cur,q.c)[q.g]=+el.value;recalc();save()}else if(q.tf){cur[q.tf]=el.value;save()}});
-document.addEventListener('change',e=>{const el=e.target,q=el.dataset;
- if(q.df){cur.days[+q.d].cc=el.value;save();render()}else if(q.g){render()}
- else if(q.dt){cur.days[+q.dt].date=el.value;save();render()}
- else if(q.up){const[d,i]=q.up.split(',').map(Number);if(el.files[0])up(el.files[0]).then(u=>{cur.days[d].rows[i].img=u;save();render()})}});
-function adopt(j){try{const o=JSON.parse(j);S={trips:o.trips||[],cw:o.cw||S.cw};if(cur)cur=S.trips.find(t=>t.id==cur.id)||null;const a=document.activeElement;if(!a||!/INPUT|SELECT/.test(a.tagName))render()}catch(e){}}
-try{adopt(localStorage.getItem('tabi')||'{}')}catch(e){}
-render();setInterval(live,30000);
-(async()=>{try{if(!window.claude)return;const[u,db]=await Promise.all([claude.use('user'),claude.use('db')]);if(!u||!db)return;const id=await u.id();doc=db.collection('data/users/'+id).doc('trips');render();
- doc.onSnapshot(s=>{const d=s.exists&&s.data();if(!d||!d.json){if(S.trips.length)save();return}if(d.json!==lastJ){lastJ=d.json;adopt(d.json)}},()=>{})}catch(e){}})();
+ if(q.w!=null){S.cw[+q.w]=+el.value;persist();render();return}
+ if(q.f){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.f]=el.value;recalc();save(cur)}
+ else if(q.g=='r'){cur.rates[q.cur]=+el.value;recalc();save(cur)}else if(q.tf){cur[q.tf]=el.value;recalc();save(cur)}
+ else if(q.ckt!=null){cur.ck[q.k][+q.i].t=el.value;save(cur)}});
+document.addEventListener('change',e=>{const el=e.target,q=el.dataset,r=el.closest('.row');
+ if(q.tm){const x=cur.days[+r.dataset.d].rows[+r.dataset.i];x[q.tm]=nt(el.value);save(cur);render()}
+ else if(q.rc!=null){cur.days[+r.dataset.d].rows[+r.dataset.i].c=el.value;save(cur);render()}
+ else if(q.dc!=null){cur.days[+q.dc].cc=el.value;save(cur);render()}else if(q.dt!=null){cur.days[+q.dt].date=el.value;save(cur);render()}
+ else if(q.g=='z'){cur.tz[q.n]=+el.value;save(cur);render()}else if(q.g=='r'){render()}
+ else if(q.ckd!=null){cur.ck[q.k][+q.i].d=el.checked;save(cur);render()}
+ else if(q.up){const[d,i]=q.up.split(',').map(Number);if(el.files[0])shrink(el.files[0]).then(u=>{cur.days[d].rows[i].img=u;save(cur);render()})}});
+try{const o=JSON.parse(localStorage.getItem('tabi2')||'{}');S={trips:o.trips||[],cw:o.cw||S.cw}}catch(e){}
+render();setInterval(live,30000);fbStart();{const n=nextTrip();if(n)getRates(n.t)}
 </script></body></html>
