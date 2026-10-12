@@ -30,6 +30,12 @@ button.o{background:none;color:var(--ink);border-color:var(--line)}button.o.on{b
 .badge{font-size:10px;background:var(--gd);color:#130d24;border-radius:3px;padding:0 5px;margin-left:4px}
 .ck{display:flex;gap:6px;align-items:center;margin:4px 0}.ck input[type=text]{flex:1}.ck.d input[type=text]{text-decoration:line-through;color:var(--mut)}
 .cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.vr{display:grid;grid-template-columns:140px 1fr auto 56px;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.vr .tm{font-weight:600;font-size:15px}.vr .am{text-align:right;font-size:13px;white-space:nowrap;line-height:1.5}.vr img{height:48px;width:56px;object-fit:cover;border-radius:4px;cursor:zoom-in}
+.vr img.big{position:fixed;inset:4%;width:92%;height:92%;object-fit:contain;background:#000c;z-index:9;cursor:zoom-out}
+.vr.now{background:var(--now);box-shadow:0 0 0 3px var(--now)}.vr.past{opacity:.5}
+@media(max-width:700px){.vr{grid-template-columns:96px 1fr 56px}.vr .am{grid-column:1/4;text-align:left}}
 @container (max-width:999px){.row{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"t t c x" "a a a i" "p l f y" "d n n n"}.t{grid-area:t}.c{grid-area:c}.a{grid-area:a}.p{grid-area:p}.l{grid-area:l}.fe{grid-area:f}.y{grid-area:y}.d{grid-area:d}.n{grid-area:n}.i{grid-area:i}.x{grid-area:x}}
 @container (max-width:559px){.row{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"t t" "c x" "a a" "p l" "f y" "d i" "n n"}}
 @media(max-width:700px){#app{padding:8px}.cols2{grid-template-columns:1fr}.kv div,.cn{white-space:normal}}
@@ -48,7 +54,7 @@ const uid=()=>Math.random().toString(36).slice(2,9),fmt=n=>Math.round(n).toLocal
 const addD=(s,n)=>new Date(new Date(s+'T00:00:00Z').getTime()+n*864e5).toISOString().slice(0,10);
 const mn=s=>s?(+s.slice(0,2))*60+(+s.slice(3,5)):null;
 const R=a=>({a,t1:'',t2:'',c:'',p:'',l:'',f:'',n:'',img:''});
-let S={trips:[],cw:[2.2,1.1,1.8,1,1.1,.6,1,.9,1.3,1.1],cwv:2},cur=null,setOpen=0,arch=0,tab='d',kr=0,col=null,unsub=null,first=1,code=localStorage.getItem('tabi_code')||'',tmr={};
+let S={trips:[],tpls:[],cw:[2.2,1.1,1.8,1,1.1,.6,1,.9,1.3,1.1],cwv:2},cur=null,setOpen=0,wdOpen=0,arch=0,tab='v',kr=0,col=null,unsub=null,first=1,code=localStorage.getItem('tabi_code')||'',tmr={};
 function persist(){try{localStorage.setItem('tabi2',JSON.stringify(S))}catch(e){}}
 function save(t){if(!t)return;t.updated=Date.now();persist();clearTimeout(tmr[t.id]);tmr[t.id]=setTimeout(()=>{if(col)col.doc(t.id).set({json:JSON.stringify(t)}).catch(()=>setSt('同期エラー'))},600)}
 function setSt(m){const e=$('#sy');if(e)e.textContent=m||(col?'同期中 (コード: '+code+')':'この端末のみ保存')}
@@ -62,8 +68,8 @@ function ckc(t){const a=[...t.ck.todo,...t.ck.bag];return[a.filter(x=>x.d).lengt
 function mkTrip(name,s,e,from){const n=Math.max(1,Math.round((new Date(e)-new Date(s))/864e5)),days=[{id:uid(),label:'事前準備',date:'',cc:'日本',rows:['航空券','ホテル代','eSIM','海外保険'].map(R)}];
  for(let i=0;i<=n;i++)days.push({id:uid(),label:i==0?'出発日':i==n?'帰国日':'Day'+i,date:addD(s,i),cc:'日本',rows:[R('')]});
  days.push({id:uid(),label:'その他',date:'',cc:'日本',rows:[R('お土産'),R('予備費')]});
- const src=S.trips.find(x=>x.id==from),cp=a=>(a||[]).map(x=>({t:x.t,d:false}));
- return{id:uid(),name,start:s,end:e,arch:0,cs:[],rates:{},tz:{},rt:0,fee:0,days,ck:src?{todo:cp(src.ck.todo),bag:cp(src.ck.bag)}:{todo:[],bag:[]},updated:Date.now()}}
+ const src=from,cp=a=>(a||[]).map(x=>({t:x.t,d:false}));
+ return{id:uid(),name,start:s,end:e,arch:0,cs:[],rates:{},tz:{},rt:0,fee:0,days,ck:src?{todo:cp((src.ck||src).todo),bag:cp((src.ck||src).bag)}:{todo:[],bag:[]},updated:Date.now()}}
 function dep(t){let best=null;t.days.filter(d=>d.date).forEach(d=>{const E=effs(d);d.rows.forEach((r,i)=>{if(!r.t1)return;const z=tz(t,E[i]),ms=Date.parse(d.date+'T'+r.t1+':00Z')-(9+z)*36e5;if(!best||ms<best.ms)best={ms,r,d,e:E[i]}})});
  return best||{ms:Date.parse(t.start+'T00:00:00+09:00'),r:null,d:null,e:'日本'}}
 function nextTrip(){let b=null;S.trips.filter(t=>!t.arch&&t.start).forEach(t=>{const d=dep(t);if(d.ms>Date.now()&&(!b||d.ms<b.ms))b={t,...d}});return b}
@@ -76,11 +82,16 @@ function home(){const L=S.trips.filter(t=>!!t.arch==!!arch);
  return`<h1>TRAVEL NOTE<span class=sy id=sy></span></h1>
 <div class="card hero"><div class=mut>次の渡航先</div><div id=cd></div><div class=kv id=nx></div></div>
 <div class=grid id=cns style="margin-bottom:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr))"></div>
-<div class=cols2><div class=card><h2>新しい日程表</h2><input id=nn placeholder="タイトル" style="width:100%;margin-bottom:6px"><div style="display:flex;gap:6px;margin-bottom:6px"><input id=ns type=date style="flex:1"><input id=ne type=date style="flex:1"></div><select id=nf style="width:100%;margin-bottom:8px"><option value="">チェックリストを複製しない</option>${S.trips.map(t=>`<option value=${t.id}>チェックリスト複製: ${esc(t.name)}</option>`).join('')}</select><button data-act=new>作成</button></div>
+<div class=cols2><div class=card><h2>新しい日程表</h2><input id=nn placeholder="タイトル" style="width:100%;margin-bottom:6px"><div style="display:flex;gap:6px;margin-bottom:6px"><input id=ns type=date style="flex:1"><input id=ne type=date style="flex:1"></div><select id=nf style="width:100%;margin-bottom:8px"><option value="">チェックリストなし</option>${S.tpls.map(t=>`<option value="t:${t.id}">テンプレート: ${esc(t.name)}</option>`).join('')}${S.trips.map(t=>`<option value="c:${t.id}">複製: ${esc(t.name)}</option>`).join('')}</select><button data-act=new>作成</button></div>
 <div class=card><h2>端末間の同期</h2><div class=mut style="margin-bottom:6px">同じ同期コードを入力した端末・ブラウザでデータが連動します(Firebase設定が必要)。</div><input id=sc value="${esc(code)}" placeholder="同期コード(英数字8文字以上推奨)" style="width:100%;margin-bottom:6px"><button data-act=sync>同期開始</button></div></div>
-<div class=tabs><button class="o ${arch?'':'on'}" data-act=tab data-v=0>進行中</button><button class="o ${arch?'on':''}" data-act=tab data-v=1>アーカイブ</button></div><div class=grid>${L.map(card).join('')||'<span class=mut>なし</span>'}</div>`}
+<div class=tabs><button class="o ${arch==0?'on':''}" data-act=tab data-v=0>進行中</button><button class="o ${arch==1?'on':''}" data-act=tab data-v=1>アーカイブ</button><button class="o ${arch==2?'on':''}" data-act=tab data-v=2>テンプレート設定</button></div>${arch==2?tpv():`<div class=grid>${L.map(card).join('')||'<span class=mut>なし</span>'}</div>`}`}
+function vv(t){return t.days.map((d,di)=>{const E=effs(d);let p=0,r=0;d.rows.forEach((x,i)=>{p+=+x.p||0;r+=yen(t,x,E[i])||0});
+ const rows=d.rows.map((x,ri)=>{if(!(x.a||x.t1||x.t2||x.p!==''||x.l!==''||x.n||x.img))return'';const e=E[ri],o=CT[e],y=yen(t,x,e),j=jst(x.t1,tz(t,e),e);
+  return`<div class=vr data-d=${di} data-i=${ri}><div><div class=tm>${x.t1||'--:--'}${x.t2?' - '+x.t2:''}<span class=badge style="display:none"></span></div><small class=mut>${esc(e)}${j?'　'+j:''}</small></div><div><b>${esc(x.a||'(内容未設定)')}</b>${x.n?`<div class=mut>${esc(x.n)}</div>`:''}</div><div class=am>予定 ${x.p!==''?fmt(+x.p)+'円':'-'}<br>結果 ${y==null?'-':fmt(y)+'円'}${o.c!='JPY'&&x.l!==''?` (${esc(x.l)} ${o.c})`:''}<br>${y!=null&&x.p!==''?'差額 '+fmt((+x.p)-y)+'円':'&nbsp;'}</div><div>${x.img?`<img src="${x.img}" data-act=zoom>`:''}</div></div>`}).join('');
+ return`<section class=card><div class=dh><h3>${esc(d.label)}</h3><span class=mut>${d.date||''}　基本の国 ${esc(d.cc)}</span><b class=sum>予算 ${fmt(p)}円 / 使用 ${fmt(r)}円</b></div>${rows||'<div class=mut>予定なし(編集タブで追加)</div>'}</section>`}).join('')}
+function tpv(){return`<div class=card><h2>チェックリストのテンプレート</h2><div class=mut style="margin-bottom:8px">ここで作成したテンプレートは、日程表の新規作成時や、各日程表のチェックリスト画面から取得できます。</div><div style="display:flex;gap:6px"><input id=tpn placeholder="テンプレート名" style="flex:1"><button data-act=tpnew>テンプレート作成</button></div></div>`+S.tpls.map(tp=>`<div class=card><div class=dh><input data-tpn=${tp.id} value="${esc(tp.name)}" style="font-weight:600;width:260px"><button class="o s" data-act=tpdel data-id=${tp.id}>テンプレートを削除</button></div><div class=cols2>${['todo','bag'].map(k=>`<div><div class=mut>${k=='todo'?'やること':'持ち物'}</div>${tp[k].map((x,i)=>`<div class=ck><input type=text data-tpt data-id=${tp.id} data-k=${k} data-i=${i} value="${esc(x.t)}"><button class="o s" data-act=tpimv data-id=${tp.id} data-k=${k} data-i=${i} data-v=-1>↑</button><button class="o s" data-act=tpimv data-id=${tp.id} data-k=${k} data-i=${i} data-v=1>↓</button><button class="o s" data-act=tpidel data-id=${tp.id} data-k=${k} data-i=${i}>削除</button></div>`).join('')}<div class=ck><input type=text id=tpa_${tp.id}_${k} placeholder="追加"><button class=s data-act=tpadd data-id=${tp.id} data-k=${k}>追加</button></div></div>`).join('')}</div></div>`).join('')}
 function ckv(t){const lst=(k,n)=>`<div class=card><h2>${n}</h2>${t.ck[k].map((x,i)=>`<div class="ck ${x.d?'d':''}"><input type=checkbox data-k=${k} data-i=${i} data-ckd ${x.d?'checked':''}><input type=text data-k=${k} data-i=${i} data-ckt value="${esc(x.t)}"><button class="o s" data-act=ckmv data-k=${k} data-i=${i} data-v=-1>↑</button><button class="o s" data-act=ckmv data-k=${k} data-i=${i} data-v=1>↓</button><button class="o s" data-act=ckdel data-k=${k} data-i=${i}>削除</button></div>`).join('')}<div class=ck><input type=text id=add_${k} placeholder="追加" style="flex:1"><button class=s data-act=ckadd data-k=${k}>追加</button></div></div>`;
- return`<div class=cols2>${lst('todo','やること')}${lst('bag','持ち物')}</div>`}
+ return`<div class=card><h2>テンプレート</h2><div style="display:flex;gap:6px;flex-wrap:wrap"><select id=tpg>${S.tpls.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')||'<option value="">テンプレートなし(最初のページの「テンプレート設定」で作成)</option>'}</select><button class=s data-act=tpget>テンプレから取得</button><button class="o s" data-act=tpsave>この内容をテンプレートとして保存</button></div></div><div class=cols2>${lst('todo','やること')}${lst('bag','持ち物')}</div>`}
 function dayv(t,d,di){const E=effs(d),cn=['日本',...t.cs],opt=(v,blank)=>`${blank?'<option value="">同上</option>':''}${cn.map(c=>`<option ${c==v?'selected':''}>${esc(c)}</option>`).join('')}`;
  return`<section class="card day"><div class=dh><input data-dl=${di} value="${esc(d.label)}" style="width:110px;font-weight:600">${d.date?`<input type=date data-dt=${di} value="${d.date}">`:''}<select data-dc=${di}>${opt(d.cc)}</select><span class=mut>基本の国</span><button class="o s" data-act=sort data-d=${di}>時間順に並べ替え</button><button class="o s" data-act=delday data-d=${di}>この日程を削除</button><b class=sum data-ds=${di}></b></div>
 ${d.rows.map((r,ri)=>{const e=E[ri],o=CT[e],z=tz(t,e),loc=o.c=='JPY',m=r.fm||(r.f!==''&&r.f!=null?'c':'');return`<div class=row data-d=${di} data-i=${ri}>
@@ -89,7 +100,7 @@ ${d.rows.map((r,ri)=>{const e=E[ri],o=CT[e],z=tz(t,e),loc=o.c=='JPY',m=r.fm||(r.
 <div class="f a"><label>内容</label><input data-f=a value="${esc(r.a)}"></div>
 <div class="f p"><label>予定(円)</label><input data-f=p type=number inputmode=decimal value="${r.p}"></div>
 <div class="f l"><label>結果(${o.c})</label><input data-f=l type=number inputmode=decimal value="${r.l}"></div>
-<div class="f fe"><label>手数料</label><div class=tt><select data-fm ${loc?'disabled':''}><option value="" ${m==''?'selected':''}>初期値${t.fee}%</option><option value=n ${m=='n'?'selected':''}>なし</option><option value=c ${m=='c'?'selected':''}>個別</option></select>${m=='c'&&!loc?`<input data-f=f type=number step=any inputmode=decimal value="${r.f}" placeholder="%">`:''}</div></div>
+<div class="f fe"><label>手数料</label><div class=tt>${loc?'<select disabled><option>なし</option></select>':''}<select data-fm ${loc?'hidden':''}><option value="" ${m==''?'selected':''}>初期値${t.fee}%</option><option value=n ${m=='n'?'selected':''}>なし</option><option value=c ${m=='c'?'selected':''}>個別</option></select>${m=='c'&&!loc?`<input data-f=f type=number step=any inputmode=decimal value="${r.f}" placeholder="%">`:''}</div></div>
 <div class="f y"><label>結果(円)</label><input data-y="${di},${ri}" disabled></div>
 <div class="f d"><label>差額(円)</label><input data-df="${di},${ri}" disabled></div>
 <div class="f n"><label>備考</label><input data-f=n value="${esc(r.n)}"></div>
@@ -102,17 +113,17 @@ function tv(t){const sel=t.cs;
  const ri=sel.map(n=>{const o=CT[n];return`<div class=rt style="display:inline-block;margin:4px 8px 4px 0"><b>${esc(n)}</b> ${o.c} 1=<input data-g=r data-cur=${o.c} type=number step=any value="${t.rates[o.c]||''}" style="width:90px">円 時差<input data-g=z data-n="${esc(n)}" type=number step=.25 value="${tz(t,n)}" style="width:60px">h</div>`}).join('');
  const wd=['時間','国','内容','予定','結果','手数料','円','差額','備考','画像'].map((n,i)=>`<label class=mut>${n}<input type=range min=.4 max=3 step=.1 value=${S.cw[i]} data-w=${i}></label> `).join('');
  return`<h1><button class=o data-act=back>戻る</button> <input data-tf=name value="${esc(t.name)}" style="width:min(60%,320px);font-size:15px"><span class=sy id=sy></span></h1>
-<div class=tabs><button class="o ${tab=='d'?'on':''}" data-act=tb data-v=d>日程・予算</button><button class="o ${tab=='c'?'on':''}" data-act=tb data-v=c>チェックリスト</button></div>
-${tab=='c'?ckv(t):`<details class=card id=setp ${setOpen?'open':''}><summary style="cursor:pointer;font-weight:600">国・レート・手数料の設定 (クリックで開閉)</summary><h2 style="margin-top:10px">訪れる国(あいうえお順・複数選択)</h2><div class=tabs>${kt}</div><div class=tabs>${chips}</div><div style="margin-top:6px">${sel.map(n=>`<span class=badge style="padding:2px 8px;font-size:12px">${esc(n)}</span> `).join('')||'<span class=mut>未選択</span>'}</div><div style="margin-top:8px">${ri}</div>
+<div class=tabs><button class="o ${tab=='v'?'on':''}" data-act=tb data-v=v>表示</button><button class="o ${tab=='d'?'on':''}" data-act=tb data-v=d>日程編集</button><button class="o ${tab=='c'?'on':''}" data-act=tb data-v=c>チェックリスト</button><button class="o ${tab=='s'?'on':''}" data-act=tb data-v=s>設定</button></div>
+${tab=='c'?ckv(t):tab=='s'?`<div class=card><h2>訪れる国(あいうえお順・複数選択)</h2><div class=tabs>${kt}</div><div class=tabs>${chips}</div><div style="margin-top:6px">${sel.map(n=>`<span class=badge style="padding:2px 8px;font-size:12px">${esc(n)}</span> `).join('')||'<span class=mut>未選択</span>'}</div><div style="margin-top:8px">${ri}</div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><button data-act=rates>最新レートを取得</button><span class=mut id=rtm>${t.rt?'最終取得 '+new Date(t.rt).toLocaleString('ja-JP'):'未取得'}</span><label class=mut>カード手数料(%) 初期値(0で手数料なし・行ごとにも設定可)<input data-tf=fee type=number step=.1 value="${t.fee}" style="width:70px;display:inline-block"></label></div>
-<details style="margin-top:8px"><summary class=mut>項目の幅調整</summary>${wd}</details></details>${t.days.map((d,i)=>dayv(t,d,i)).join('')}<button class=o data-act=addday>日程を追加</button><div class=card id=tt style="position:sticky;bottom:0;margin-top:12px;z-index:3;border-color:var(--ac);white-space:nowrap;overflow-x:auto;font-size:13px"></div>`}`}
+<div class=mut style="margin-top:8px">日本の行は手数料なし。海外の行は「初期値 / なし / 個別」を行ごとに選べます。</div></div>`:`${tab=='v'?vv(t):`<details id=wdp class=card ${wdOpen?'open':''}><summary class=mut>項目の幅調整(スライダーで列幅を変更)</summary>${wd}</details>`+t.days.map((d,i)=>dayv(t,d,i)).join('')+'<button class=o data-act=addday>日程を追加</button>'}<div class=card id=tt style="position:sticky;bottom:0;margin-top:12px;z-index:3;border-color:var(--ac);white-space:nowrap;overflow-x:auto;font-size:13px"></div>`}`}
 let lk='',vt;function vsave(){try{localStorage.setItem('tabi_view',JSON.stringify({c:cur&&cur.id,tab,arch,kr,so:setOpen,y:scrollY}))}catch(e){}}
 function render(){const k=(cur&&cur.id)+'|'+tab+'|'+arch,y=scrollY;$('#app').innerHTML=cur?tv(cur):home();scrollTo(0,k==lk?y:0);lk=k;document.documentElement.style.setProperty('--cols',S.cw.map(w=>`minmax(0,${w}fr)`).join(' ')+' 30px');recalc();live();setSt();vsave()}
-function recalc(){const t=cur;if(!t||tab!='d')return;t.days.forEach((d,di)=>{const E=effs(d);let p=0,r=0;d.rows.forEach((x,ri)=>{const y=yen(t,x,E[ri]);p+=+x.p||0;r+=y||0;const a=$(`[data-y="${di},${ri}"]`),b=$(`[data-df="${di},${ri}"]`);if(a)a.value=y==null?'':fmt(y);if(b)b.value=y==null||x.p===''?'':fmt((+x.p)-y)});const e=$(`[data-ds="${di}"]`);if(e)e.textContent=`予算 ${fmt(p)}円 / 使用 ${fmt(r)}円`});
+function recalc(){const t=cur;if(!t||(tab!='d'&&tab!='v'))return;t.days.forEach((d,di)=>{const E=effs(d);let p=0,r=0;d.rows.forEach((x,ri)=>{const y=yen(t,x,E[ri]);p+=+x.p||0;r+=y||0;const a=$(`[data-y="${di},${ri}"]`),b=$(`[data-df="${di},${ri}"]`);if(a)a.value=y==null?'':fmt(y);if(b)b.value=y==null||x.p===''?'':fmt((+x.p)-y)});const e=$(`[data-ds="${di}"]`);if(e)e.textContent=`予算 ${fmt(p)}円 / 使用 ${fmt(r)}円`});
  const[P,Rr]=tot(t),e=$('#tt');if(e){const rs=[...new Set(t.cs.map(n=>CT[n].c))].filter(c=>c!='JPY').map(c=>`${c} 1=${t.rates[c]||'未取得'}円`).join('　');e.innerHTML=`合計　予算 <b>${fmt(P)}円</b>　使用 <b>${fmt(Rr)}円</b>　差額 <b>${fmt(P-Rr)}円</b>`+(rs?`　<span class=mut>レート　${rs}</span>`:'')}}
 function live(){const cd=$('#cd');if(cd){const b=nextTrip();if(b){const m=Math.floor((b.ms-Date.now())/6e4),[P,Rr]=tot(b.t),[a,c]=ckc(b.t);cd.textContent=`${b.t.name}　あと ${m/1440|0}日 ${pad((m%1440)/60|0)}時間 ${pad(m%60)}分`;const lt=new Date(b.ms+(9+tz(b.t,b.e))*36e5);$('#nx').innerHTML=`<div><span class=mut>出発(日本時間)</span><b>${new Date(b.ms+9*36e5).toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>出発(現地時間)</span><b>${lt.toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>最初の予定</span><b>${b.r?esc(b.r.a||'-'):'未設定'}</b></div><div><span class=mut>期間</span><b>${b.t.start} - ${b.t.end}</b></div><div><span class=mut>予算</span><b>${fmt(P)}円</b></div><div><span class=mut>使用済み</span><b>${fmt(Rr)}円</b></div><div><span class=mut>チェックリスト</span><b>${a} / ${c}</b></div><div><span class=mut>訪問国</span><b>${b.t.cs.map(esc).join(' ')||'未設定'}</b></div>`;$('#cns').innerHTML=tsum(b.t)}else{cd.textContent='日程表を作成してください';$('#nx').innerHTML='';$('#cns').innerHTML=''}}
  $$('[data-lt]').forEach(e=>{const d=new Date(Date.now()+(9+ +e.dataset.lt)*36e5);e.textContent=d.toISOString().slice(5,16).replace('T',' ')});
- if(!cur||tab!='d')return;cur.days.forEach((d,di)=>{if(!d.date)return;const E=effs(d);d.rows.forEach((r,ri)=>{const el=$(`.row[data-d="${di}"][data-i="${ri}"]`);if(!el)return;const[nd,nm]=nowLocal(tz(cur,E[ri])),s=mn(r.t1);let e=mn(r.t2);if(e==null||(s!=null&&e<=s)){const nx=d.rows.slice(ri+1).find(x=>x.t1);e=nx?mn(nx.t1):1440}
+ if(!cur||(tab!='d'&&tab!='v'))return;cur.days.forEach((d,di)=>{if(!d.date)return;const E=effs(d);d.rows.forEach((r,ri)=>{const el=$(`.row[data-d="${di}"][data-i="${ri}"],.vr[data-d="${di}"][data-i="${ri}"]`);if(!el)return;const[nd,nm]=nowLocal(tz(cur,E[ri])),s=mn(r.t1);let e=mn(r.t2);if(e==null||(s!=null&&e<=s)){const nx=d.rows.slice(ri+1).find(x=>x.t1);e=nx?mn(nx.t1):1440}
   let st='';if(d.date<nd)st='past';else if(d.date==nd&&s!=null){if(nm>=e)st='past';else if(nm>=s)st='now'}
   el.classList.toggle('past',st=='past');el.classList.toggle('now',st=='now');const b=$('.badge',el);b.style.display=st?'inline':'none';b.textContent=st=='now'?'NOW':'済'})})}
 async function getRates(t,force){const need=[...new Set(t.cs.map(n=>CT[n].c))].filter(c=>c!='JPY');if(!need.length)return;if(!force&&t.rt&&Date.now()-t.rt<36e5)return;
@@ -121,14 +132,14 @@ function shrink(f){return new Promise(r=>{const i=new Image();i.onload=()=>{cons
 const ld=u=>new Promise((r,j)=>{const s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s)});
 async function fbStart(){if(!FBCFG||!code){setSt();return}try{if(!window.firebase){await ld('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');await ld('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js')}
  if(!firebase.apps.length)firebase.initializeApp(FBCFG);if(unsub)unsub();col=firebase.firestore().collection('tabi').doc(code).collection('trips');first=1;
- unsub=col.onSnapshot(sn=>{sn.docChanges().forEach(ch=>{const id=ch.doc.id;if(ch.type=='removed'){S.trips=S.trips.filter(t=>t.id!=id);if(cur&&cur.id==id)cur=null;return}
-  let o;try{o=JSON.parse(ch.doc.data().json)}catch(e){return}const i=S.trips.findIndex(t=>t.id==id);if(i<0)S.trips.push(o);else if((o.updated||0)>(S.trips[i].updated||0)){S.trips[i]=o;if(cur&&cur.id==id)cur=o}});
-  if(first){first=0;S.trips.forEach(t=>{if(!sn.docs.some(d=>d.id==t.id))col.doc(t.id).set({json:JSON.stringify(t)})})}
+ unsub=col.onSnapshot(sn=>{sn.docChanges().forEach(ch=>{const id=ch.doc.id;if(ch.type=='removed'){S.trips=S.trips.filter(t=>t.id!=id);S.tpls=S.tpls.filter(t=>t.id!=id);if(cur&&cur.id==id)cur=null;return}
+  let o;try{o=JSON.parse(ch.doc.data().json)}catch(e){return}if(o.kind=='tpl'){const j=S.tpls.findIndex(t=>t.id==id);if(j<0)S.tpls.push(o);else if((o.updated||0)>(S.tpls[j].updated||0))S.tpls[j]=o;return}const i=S.trips.findIndex(t=>t.id==id);if(i<0)S.trips.push(o);else if((o.updated||0)>(S.trips[i].updated||0)){S.trips[i]=o;if(cur&&cur.id==id)cur=o}});
+  if(first){first=0;[...S.trips,...S.tpls].forEach(t=>{if(!sn.docs.some(d=>d.id==t.id))col.doc(t.id).set({json:JSON.stringify(t)})})}
   persist();const a=document.activeElement;if(!a||!/INPUT|SELECT/.test(a.tagName))render();else setSt()},()=>setSt('同期エラー(設定・ルールを確認)'));setSt()}catch(e){setSt('Firebase読込に失敗')}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,d=+b.dataset.d,i=+b.dataset.i,id=b.dataset.id,T=S.trips.find(t=>t.id==id),k=b.dataset.k;
  if(a=='zoom'){b.classList.toggle('big');return}
- if(a=='open'){cur=T;tab='d';getRates(T)}else if(a=='back')cur=null;else if(a=='tab')arch=+b.dataset.v;else if(a=='tb')tab=b.dataset.v;else if(a=='kr')kr=+b.dataset.v;
- else if(a=='new'){const s=$('#ns').value||new Date().toISOString().slice(0,10),en=$('#ne').value||addD(s,2),t=mkTrip($('#nn').value||'新しい旅',s,en,$('#nf').value);S.trips.push(t);save(t)}
+ if(a=='open'){cur=T;tab='v';getRates(T)}else if(a=='back')cur=null;else if(a=='tab')arch=+b.dataset.v;else if(a=='tb')tab=b.dataset.v;else if(a=='kr')kr=+b.dataset.v;
+ else if(a=='new'){const s=$('#ns').value||new Date().toISOString().slice(0,10),en=$('#ne').value||addD(s,2),v=$('#nf').value,sr=v.slice(0,2)=='t:'?S.tpls.find(x=>x.id==v.slice(2)):v.slice(0,2)=='c:'?S.trips.find(x=>x.id==v.slice(2)):null,t=mkTrip($('#nn').value||'新しい旅',s,en,sr);S.trips.push(t);save(t)}
  else if(a=='arch'){T.arch=T.arch?0:1;save(T)}else if(a=='del'){if(!confirm('削除しますか?'))return;S.trips=S.trips.filter(t=>t.id!=id);persist();if(col)col.doc(id).delete()}
  else if(a=='sync'){code=$('#sc').value.trim();localStorage.setItem('tabi_code',code);fbStart();return}
  else if(a=='tgl'){const n=b.dataset.n,x=cur.cs.indexOf(n);if(x<0)cur.cs.push(n);else{cur.cs.splice(x,1);cur.days.forEach(y=>{if(y.cc==n)y.cc='日本';y.rows.forEach(r=>{if(r.c==n)r.c=''})})}save(cur);getRates(cur)}
@@ -136,13 +147,20 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
  else if(a=='addrow'){cur.days[d].rows.push(R(''));save(cur)}else if(a=='delrow'){cur.days[d].rows.splice(i,1);save(cur)}
  else if(a=='sort'){const E=effs(cur.days[d]);cur.days[d].rows.forEach((r,x)=>r.c=r.c||(x?'':''));const rs=cur.days[d].rows.map((r,x)=>({...r,c:E[x]}));rs.sort((p,q)=>(p.t1||'99:99')<(q.t1||'99:99')?-1:1);cur.days[d].rows=rs;save(cur)}
  else if(a=='addday'){cur.days.push({id:uid(),label:'追加日',date:cur.end,cc:'日本',rows:[R('')]});save(cur)}
- else if(a=='ckadd'){const v=$('#add_'+k).value.trim();if(v){cur.ck[k].push({t:v,d:false});save(cur)}}else if(a=='ckdel'){cur.ck[k].splice(i,1);save(cur)}else if(a=='ckmv'){const l=cur.ck[k],j=i+ +b.dataset.v;if(j>=0&&j<l.length){[l[i],l[j]]=[l[j],l[i]];save(cur)}}else if(a=='delday'){if(!confirm('この日程を削除しますか?'))return;cur.days.splice(d,1);save(cur)}
+ else if(a=='ckadd'){const v=$('#add_'+k).value.trim();if(v){cur.ck[k].push({t:v,d:false});save(cur)}}else if(a=='tpnew'){const tp={id:'tpl-'+uid(),kind:'tpl',name:$('#tpn').value||'新しいテンプレート',todo:[],bag:[]};S.tpls.push(tp);save(tp)}
+ else if(a=='tpdel'){if(!confirm('このテンプレートを削除しますか?'))return;S.tpls=S.tpls.filter(x=>x.id!=id);persist();if(col)col.doc(id).delete()}
+ else if(a=='tpadd'){const tp=S.tpls.find(x=>x.id==id),v=$('#tpa_'+id+'_'+k).value.trim();if(tp&&v){tp[k].push({t:v});save(tp)}}
+ else if(a=='tpidel'){const tp=S.tpls.find(x=>x.id==id);tp[k].splice(i,1);save(tp)}
+ else if(a=='tpimv'){const tp=S.tpls.find(x=>x.id==id),l=tp[k],j=i+ +b.dataset.v;if(j>=0&&j<l.length){[l[i],l[j]]=[l[j],l[i]];save(tp)}}
+ else if(a=='tpget'){const tp=S.tpls.find(x=>x.id==$('#tpg').value);if(tp){['todo','bag'].forEach(q=>tp[q].forEach(x=>cur.ck[q].push({t:x.t,d:false})));save(cur)}}
+ else if(a=='tpsave'){const nm=prompt('テンプレート名',cur.name);if(nm===null)return;const tp={id:'tpl-'+uid(),kind:'tpl',name:nm||'テンプレート',todo:cur.ck.todo.map(x=>({t:x.t})),bag:cur.ck.bag.map(x=>({t:x.t}))};S.tpls.push(tp);save(tp)}
+ else if(a=='ckdel'){cur.ck[k].splice(i,1);save(cur)}else if(a=='ckmv'){const l=cur.ck[k],j=i+ +b.dataset.v;if(j>=0&&j<l.length){[l[i],l[j]]=[l[j],l[i]];save(cur)}}else if(a=='delday'){if(!confirm('この日程を削除しますか?'))return;cur.days.splice(d,1);save(cur)}
  render()});
 document.addEventListener('input',e=>{const el=e.target,q=el.dataset;
- if(q.w!=null){S.cw[+q.w]=+el.value;persist();render();return}
+ if(q.w!=null){S.cw[+q.w]=+el.value;persist();document.documentElement.style.setProperty('--cols',S.cw.map(w=>`minmax(0,${w}fr)`).join(' ')+' 30px');return}
  if(q.f){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.f]=el.value;recalc();save(cur)}
  else if(q.g=='r'){cur.rates[q.cur]=+el.value;recalc();save(cur)}else if(q.tf){cur[q.tf]=el.value;recalc();save(cur)}
- else if(q.ckt!=null){cur.ck[q.k][+q.i].t=el.value;save(cur)}else if(q.tm){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.tm]=el.value;save(cur)}else if(q.dl!=null){cur.days[+q.dl].label=el.value;save(cur)}});
+ else if(q.ckt!=null){cur.ck[q.k][+q.i].t=el.value;save(cur)}else if(q.tm){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.tm]=el.value;save(cur)}else if(q.dl!=null){cur.days[+q.dl].label=el.value;save(cur)}else if(q.tpt!=null){const tp=S.tpls.find(x=>x.id==q.id);tp[q.k][+q.i].t=el.value;save(tp)}else if(q.tpn!=null){const tp=S.tpls.find(x=>x.id==q.tpn);tp.name=el.value;save(tp)}});
 document.addEventListener('change',e=>{const el=e.target,q=el.dataset,r=el.closest('.row');
  if(q.tm){const di=+r.dataset.d,ri=+r.dataset.i,x=cur.days[di].rows[ri],v=nt(el.value);x[q.tm]=v;el.value=v;save(cur);const E=effs(cur.days[di])[ri];$('.hint',r).textContent=jst(x.t1,tz(cur,E),E);live()}
  else if(q.fm!=null){const x=cur.days[+r.dataset.d].rows[+r.dataset.i];x.fm=el.value;save(cur);render()}else if(q.rc!=null){cur.days[+r.dataset.d].rows[+r.dataset.i].c=el.value;save(cur);render()}
@@ -150,9 +168,9 @@ document.addEventListener('change',e=>{const el=e.target,q=el.dataset,r=el.close
  else if(q.g=='z'){cur.tz[q.n]=+el.value;save(cur);render()}else if(q.g=='r'){render()}
  else if(q.ckd!=null){cur.ck[q.k][+q.i].d=el.checked;save(cur);render()}
  else if(q.up){const[d,i]=q.up.split(',').map(Number);if(el.files[0])shrink(el.files[0]).then(u=>{cur.days[d].rows[i].img=u;save(cur);render()})}});
-document.addEventListener('toggle',e=>{if(e.target.id=='setp')setOpen=e.target.open},true);
-try{const o=JSON.parse(localStorage.getItem('tabi2')||'{}');S={trips:o.trips||[],cw:o.cwv==2&&o.cw?o.cw:S.cw,cwv:2}}catch(e){}
-{let V={};try{V=JSON.parse(localStorage.getItem('tabi_view')||'{}')}catch(e){}if(V.c)cur=S.trips.find(t=>t.id==V.c)||null;tab=V.tab||'d';arch=V.arch||0;kr=V.kr||0;setOpen=V.so||0;lk=(cur&&cur.id)+'|'+tab+'|'+arch;render();scrollTo(0,V.y||0)}
+document.addEventListener('toggle',e=>{if(e.target.id=='wdp')wdOpen=e.target.open},true);
+try{const o=JSON.parse(localStorage.getItem('tabi2')||'{}');S={trips:o.trips||[],tpls:o.tpls||[],cw:o.cwv==2&&o.cw?o.cw:S.cw,cwv:2}}catch(e){}
+{let V={};try{V=JSON.parse(localStorage.getItem('tabi_view')||'{}')}catch(e){}if(V.c)cur=S.trips.find(t=>t.id==V.c)||null;tab=V.tab||'v';arch=V.arch||0;kr=V.kr||0;setOpen=V.so||0;lk=(cur&&cur.id)+'|'+tab+'|'+arch;render();scrollTo(0,V.y||0)}
 addEventListener('scroll',()=>{clearTimeout(vt);vt=setTimeout(vsave,200)},{passive:true});addEventListener('pagehide',vsave);
 setInterval(live,30000);fbStart();{const n=nextTrip();if(n)getRates(n.t)}
 </script></body></html>
