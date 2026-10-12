@@ -22,7 +22,7 @@ button.o{background:none;color:var(--ink);border-color:var(--line)}button.o.on{b
 .row{display:grid;grid-template-columns:var(--cols);gap:6px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
 .row.now{background:var(--now);box-shadow:0 0 0 3px var(--now)}.row.past{opacity:.5}
 .f{display:flex;flex-direction:column;min-width:0}.f>label{font-size:10px;color:var(--mut);height:14px;white-space:nowrap;overflow:hidden}
-.f input,.f select{width:100%}.tt{display:flex;gap:4px}.tt input{text-align:center;padding:0 2px;font-size:12px}
+.f input,.f select{width:100%}.tt{display:flex;gap:4px}.tt input{text-align:center;padding:0 2px;font-size:12px}.tt select{font-size:12px;padding:0 2px}
 .hint{font-size:10px;color:var(--mut);height:16px;line-height:16px;white-space:nowrap;overflow:hidden}
 .i{min-height:62px}.i .pic{display:flex;gap:4px;height:48px;align-items:center}.i img{height:48px;max-width:100%;object-fit:cover;border-radius:4px;cursor:zoom-in}
 .i img.big{position:fixed;inset:4%;width:92%;height:92%;object-fit:contain;background:#000c;z-index:9;cursor:zoom-out;border-radius:0}
@@ -55,7 +55,8 @@ function setSt(m){const e=$('#sy');if(e)e.textContent=m||(col?'同期中 (コー
 const rate=(t,c)=>c=='JPY'?1:(t.rates[c]||0);
 function effs(d){let c=d.cc||'日本';return d.rows.map(r=>c=r.c||c)}
 const tz=(t,n)=>t.tz&&t.tz[n]!=null?t.tz[n]:CT[n].z;
-function yen(t,r,e){if(r.l===''||r.l==null)return null;const o=CT[e];return o.c=='JPY'?+r.l:+r.l*rate(t,o.c)*(1+((r.f===''?+t.fee:+r.f)||0)/100)}
+const feeOf=(t,r)=>{const m=r.fm||(r.f!==''&&r.f!=null?'c':'');return m=='n'?0:m=='c'?(+r.f||0):(+t.fee||0)};
+function yen(t,r,e){if(r.l===''||r.l==null)return null;const o=CT[e];return o.c=='JPY'?+r.l:+r.l*rate(t,o.c)*(1+feeOf(t,r)/100)}
 function tot(t){let P=0,Rr=0;t.days.forEach(d=>{const E=effs(d);d.rows.forEach((r,i)=>{P+=+r.p||0;Rr+=yen(t,r,E[i])||0})});return[P,Rr]}
 function ckc(t){const a=[...t.ck.todo,...t.ck.bag];return[a.filter(x=>x.d).length,a.length]}
 function mkTrip(name,s,e,from){const n=Math.max(1,Math.round((new Date(e)-new Date(s))/864e5)),days=[{id:uid(),label:'事前準備',date:'',cc:'日本',rows:['航空券','ホテル代','eSIM','海外保険'].map(R)}];
@@ -82,13 +83,13 @@ function ckv(t){const lst=(k,n)=>`<div class=card><h2>${n}</h2>${t.ck[k].map((x,
  return`<div class=cols2>${lst('todo','やること')}${lst('bag','持ち物')}</div>`}
 function dayv(t,d,di){const E=effs(d),cn=['日本',...t.cs],opt=(v,blank)=>`${blank?'<option value="">同上</option>':''}${cn.map(c=>`<option ${c==v?'selected':''}>${esc(c)}</option>`).join('')}`;
  return`<section class="card day"><div class=dh><input data-dl=${di} value="${esc(d.label)}" style="width:110px;font-weight:600">${d.date?`<input type=date data-dt=${di} value="${d.date}">`:''}<select data-dc=${di}>${opt(d.cc)}</select><span class=mut>基本の国</span><button class="o s" data-act=sort data-d=${di}>時間順に並べ替え</button><button class="o s" data-act=delday data-d=${di}>この日程を削除</button><b class=sum data-ds=${di}></b></div>
-${d.rows.map((r,ri)=>{const e=E[ri],o=CT[e],z=tz(t,e),loc=o.c=='JPY';return`<div class=row data-d=${di} data-i=${ri}>
+${d.rows.map((r,ri)=>{const e=E[ri],o=CT[e],z=tz(t,e),loc=o.c=='JPY',m=r.fm||(r.f!==''&&r.f!=null?'c':'');return`<div class=row data-d=${di} data-i=${ri}>
 <div class="f t"><label>時間(数字で入力 例930)<span class=badge style="display:none"></span></label><div class=tt><input data-tm=t1 value="${r.t1}" inputmode=numeric placeholder="開始" autocomplete=off><input data-tm=t2 value="${r.t2}" inputmode=numeric placeholder="終了" autocomplete=off></div><div class=hint>${jst(r.t1,z,e)}</div></div>
 <div class="f c"><label>国</label><select data-rc>${opt(r.c,1)}</select></div>
 <div class="f a"><label>内容</label><input data-f=a value="${esc(r.a)}"></div>
 <div class="f p"><label>予定(円)</label><input data-f=p type=number inputmode=decimal value="${r.p}"></div>
 <div class="f l"><label>結果(${o.c})</label><input data-f=l type=number inputmode=decimal value="${r.l}"></div>
-<div class="f fe"><label>手数料%</label><input data-f=f type=number step=any inputmode=decimal value="${r.f}" placeholder="${t.fee}" ${loc?'disabled':''}></div>
+<div class="f fe"><label>手数料</label><div class=tt><select data-fm ${loc?'disabled':''}><option value="" ${m==''?'selected':''}>初期値${t.fee}%</option><option value=n ${m=='n'?'selected':''}>なし</option><option value=c ${m=='c'?'selected':''}>個別</option></select>${m=='c'&&!loc?`<input data-f=f type=number step=any inputmode=decimal value="${r.f}" placeholder="%">`:''}</div></div>
 <div class="f y"><label>結果(円)</label><input data-y="${di},${ri}" disabled></div>
 <div class="f d"><label>差額(円)</label><input data-df="${di},${ri}" disabled></div>
 <div class="f n"><label>備考</label><input data-f=n value="${esc(r.n)}"></div>
@@ -103,9 +104,10 @@ function tv(t){const sel=t.cs;
  return`<h1><button class=o data-act=back>戻る</button> <input data-tf=name value="${esc(t.name)}" style="width:min(60%,320px);font-size:15px"><span class=sy id=sy></span></h1>
 <div class=tabs><button class="o ${tab=='d'?'on':''}" data-act=tb data-v=d>日程・予算</button><button class="o ${tab=='c'?'on':''}" data-act=tb data-v=c>チェックリスト</button></div>
 ${tab=='c'?ckv(t):`<details class=card id=setp ${setOpen?'open':''}><summary style="cursor:pointer;font-weight:600">国・レート・手数料の設定 (クリックで開閉)</summary><h2 style="margin-top:10px">訪れる国(あいうえお順・複数選択)</h2><div class=tabs>${kt}</div><div class=tabs>${chips}</div><div style="margin-top:6px">${sel.map(n=>`<span class=badge style="padding:2px 8px;font-size:12px">${esc(n)}</span> `).join('')||'<span class=mut>未選択</span>'}</div><div style="margin-top:8px">${ri}</div>
-<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><button data-act=rates>最新レートを取得</button><span class=mut id=rtm>${t.rt?'最終取得 '+new Date(t.rt).toLocaleString('ja-JP'):'未取得'}</span><label class=mut>カード手数料(%) 初期値<input data-tf=fee type=number step=.1 value="${t.fee}" style="width:70px;display:inline-block"></label></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><button data-act=rates>最新レートを取得</button><span class=mut id=rtm>${t.rt?'最終取得 '+new Date(t.rt).toLocaleString('ja-JP'):'未取得'}</span><label class=mut>カード手数料(%) 初期値(0で手数料なし・行ごとにも設定可)<input data-tf=fee type=number step=.1 value="${t.fee}" style="width:70px;display:inline-block"></label></div>
 <details style="margin-top:8px"><summary class=mut>項目の幅調整</summary>${wd}</details></details>${t.days.map((d,i)=>dayv(t,d,i)).join('')}<button class=o data-act=addday>日程を追加</button><div class=card id=tt style="position:sticky;bottom:0;margin-top:12px;z-index:3;border-color:var(--ac);white-space:nowrap;overflow-x:auto;font-size:13px"></div>`}`}
-function render(){$('#app').innerHTML=cur?tv(cur):home();document.documentElement.style.setProperty('--cols',S.cw.map(w=>`minmax(0,${w}fr)`).join(' ')+' 30px');recalc();live();setSt()}
+let lk='',vt;function vsave(){try{localStorage.setItem('tabi_view',JSON.stringify({c:cur&&cur.id,tab,arch,kr,so:setOpen,y:scrollY}))}catch(e){}}
+function render(){const k=(cur&&cur.id)+'|'+tab+'|'+arch,y=scrollY;$('#app').innerHTML=cur?tv(cur):home();scrollTo(0,k==lk?y:0);lk=k;document.documentElement.style.setProperty('--cols',S.cw.map(w=>`minmax(0,${w}fr)`).join(' ')+' 30px');recalc();live();setSt();vsave()}
 function recalc(){const t=cur;if(!t||tab!='d')return;t.days.forEach((d,di)=>{const E=effs(d);let p=0,r=0;d.rows.forEach((x,ri)=>{const y=yen(t,x,E[ri]);p+=+x.p||0;r+=y||0;const a=$(`[data-y="${di},${ri}"]`),b=$(`[data-df="${di},${ri}"]`);if(a)a.value=y==null?'':fmt(y);if(b)b.value=y==null||x.p===''?'':fmt((+x.p)-y)});const e=$(`[data-ds="${di}"]`);if(e)e.textContent=`予算 ${fmt(p)}円 / 使用 ${fmt(r)}円`});
  const[P,Rr]=tot(t),e=$('#tt');if(e){const rs=[...new Set(t.cs.map(n=>CT[n].c))].filter(c=>c!='JPY').map(c=>`${c} 1=${t.rates[c]||'未取得'}円`).join('　');e.innerHTML=`合計　予算 <b>${fmt(P)}円</b>　使用 <b>${fmt(Rr)}円</b>　差額 <b>${fmt(P-Rr)}円</b>`+(rs?`　<span class=mut>レート　${rs}</span>`:'')}}
 function live(){const cd=$('#cd');if(cd){const b=nextTrip();if(b){const m=Math.floor((b.ms-Date.now())/6e4),[P,Rr]=tot(b.t),[a,c]=ckc(b.t);cd.textContent=`${b.t.name}　あと ${m/1440|0}日 ${pad((m%1440)/60|0)}時間 ${pad(m%60)}分`;const lt=new Date(b.ms+(9+tz(b.t,b.e))*36e5);$('#nx').innerHTML=`<div><span class=mut>出発(日本時間)</span><b>${new Date(b.ms+9*36e5).toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>出発(現地時間)</span><b>${lt.toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>最初の予定</span><b>${b.r?esc(b.r.a||'-'):'未設定'}</b></div><div><span class=mut>期間</span><b>${b.t.start} - ${b.t.end}</b></div><div><span class=mut>予算</span><b>${fmt(P)}円</b></div><div><span class=mut>使用済み</span><b>${fmt(Rr)}円</b></div><div><span class=mut>チェックリスト</span><b>${a} / ${c}</b></div><div><span class=mut>訪問国</span><b>${b.t.cs.map(esc).join(' ')||'未設定'}</b></div>`;$('#cns').innerHTML=tsum(b.t)}else{cd.textContent='日程表を作成してください';$('#nx').innerHTML='';$('#cns').innerHTML=''}}
@@ -143,12 +145,14 @@ document.addEventListener('input',e=>{const el=e.target,q=el.dataset;
  else if(q.ckt!=null){cur.ck[q.k][+q.i].t=el.value;save(cur)}else if(q.tm){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.tm]=el.value;save(cur)}else if(q.dl!=null){cur.days[+q.dl].label=el.value;save(cur)}});
 document.addEventListener('change',e=>{const el=e.target,q=el.dataset,r=el.closest('.row');
  if(q.tm){const di=+r.dataset.d,ri=+r.dataset.i,x=cur.days[di].rows[ri],v=nt(el.value);x[q.tm]=v;el.value=v;save(cur);const E=effs(cur.days[di])[ri];$('.hint',r).textContent=jst(x.t1,tz(cur,E),E);live()}
- else if(q.rc!=null){cur.days[+r.dataset.d].rows[+r.dataset.i].c=el.value;save(cur);render()}
+ else if(q.fm!=null){const x=cur.days[+r.dataset.d].rows[+r.dataset.i];x.fm=el.value;save(cur);render()}else if(q.rc!=null){cur.days[+r.dataset.d].rows[+r.dataset.i].c=el.value;save(cur);render()}
  else if(q.dc!=null){cur.days[+q.dc].cc=el.value;save(cur);render()}else if(q.dt!=null){cur.days[+q.dt].date=el.value;save(cur);render()}
  else if(q.g=='z'){cur.tz[q.n]=+el.value;save(cur);render()}else if(q.g=='r'){render()}
  else if(q.ckd!=null){cur.ck[q.k][+q.i].d=el.checked;save(cur);render()}
  else if(q.up){const[d,i]=q.up.split(',').map(Number);if(el.files[0])shrink(el.files[0]).then(u=>{cur.days[d].rows[i].img=u;save(cur);render()})}});
 document.addEventListener('toggle',e=>{if(e.target.id=='setp')setOpen=e.target.open},true);
 try{const o=JSON.parse(localStorage.getItem('tabi2')||'{}');S={trips:o.trips||[],cw:o.cwv==2&&o.cw?o.cw:S.cw,cwv:2}}catch(e){}
-render();setInterval(live,30000);fbStart();{const n=nextTrip();if(n)getRates(n.t)}
+{let V={};try{V=JSON.parse(localStorage.getItem('tabi_view')||'{}')}catch(e){}if(V.c)cur=S.trips.find(t=>t.id==V.c)||null;tab=V.tab||'d';arch=V.arch||0;kr=V.kr||0;setOpen=V.so||0;lk=(cur&&cur.id)+'|'+tab+'|'+arch;render();scrollTo(0,V.y||0)}
+addEventListener('scroll',()=>{clearTimeout(vt);vt=setTimeout(vsave,200)},{passive:true});addEventListener('pagehide',vsave);
+setInterval(live,30000);fbStart();{const n=nextTrip();if(n)getRates(n.t)}
 </script></body></html>
