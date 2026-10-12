@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>TRAVEL NOTE</title>
 <style>
 *{box-sizing:border-box}
-:root{color-scheme:dark;--bg:#0a0c0c;--card:#131716;--ink:#e8f1ee;--mut:#86a097;--ac:#6ee7b7;--gd:#6ee7b7;--line:#24302c;--in:#0e1211;--now:#143328}
+:root{color-scheme:dark;--bg:#0b0a10;--card:#15131d;--ink:#eceaf6;--mut:#9993b8;--ac:#c4b5fd;--gd:#c4b5fd;--line:#2a2740;--in:#0f0d16;--now:#2a2347}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',Meiryo,system-ui,sans-serif;font-size:14px}
 #app{max-width:1500px;margin:0 auto;padding:16px}
 h1{font-size:15px;letter-spacing:.3em;margin:4px 0 14px;font-weight:600}h2{font-size:15px;margin:0 0 10px;font-weight:600}h3{margin:0;font-size:16px;font-weight:600}
@@ -9,13 +9,13 @@ h1{font-size:15px;letter-spacing:.3em;margin:4px 0 14px;font-weight:600}h2{font-
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}.grid .card{margin:0}
 input,select{background:var(--in);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:0 8px;font:inherit;min-width:0;height:32px}
 input:focus,select:focus{outline:none;border-color:var(--gd)}
-button{font:inherit;cursor:pointer;border:1px solid var(--ac);background:var(--ac);color:#04130d;border-radius:4px;padding:0 14px;height:32px}
+button{font:inherit;cursor:pointer;border:1px solid var(--ac);background:var(--ac);color:#130d24;border-radius:4px;padding:0 14px;height:32px}
 button.o{background:none;color:var(--ink);border-color:var(--line)}button.o.on{border-color:var(--gd);color:var(--gd);font-weight:700}button.s{height:26px;padding:0 10px;font-size:12px}
 .mut{color:var(--mut);font-size:12px}.sy{color:var(--mut);font-size:12px;margin-left:8px}
-.hero{background:linear-gradient(135deg,#0f2a22,#0c1513);border-color:var(--ac)}.hero #cd{color:var(--ac)}
-#cd{font-size:clamp(18px,4.2vw,34px);white-space:nowrap;font-weight:600;margin:4px 0 12px}
-.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px 16px}.kv div{border-top:1px solid #6ee7b755;padding-top:6px;min-width:0}.kv b{display:block;font-size:15px;font-weight:600;overflow-wrap:anywhere}
-.cn{border:1px solid var(--line);border-radius:6px;padding:10px;background:var(--card);color:var(--ink);white-space:nowrap}
+.hero{background:linear-gradient(135deg,#251d42,#12101a);border-color:var(--ac)}.hero #cd{color:var(--ac)}
+#cd{font-size:clamp(14px,3.6vw,30px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;margin:4px 0 12px}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px 16px}.kv div{border-top:1px solid #c4b5fd55;padding-top:6px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.kv b{display:inline;font-size:15px;font-weight:600;margin-left:10px}
+.cn{border:1px solid var(--line);border-radius:6px;padding:10px;background:var(--card);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .day{container-type:inline-size}
 .dh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}.dh .sum{margin-left:auto;font-weight:600}
@@ -27,12 +27,12 @@ button.o{background:none;color:var(--ink);border-color:var(--line)}button.o.on{b
 .i{min-height:62px}.i .pic{display:flex;gap:4px;height:48px;align-items:center}.i img{height:48px;max-width:100%;object-fit:cover;border-radius:4px;cursor:zoom-in}
 .i img.big{position:fixed;inset:4%;width:92%;height:92%;object-fit:contain;background:#000c;z-index:9;cursor:zoom-out;border-radius:0}
 .up{display:inline-flex;align-items:center;justify-content:center;border:1px dashed var(--mut);border-radius:4px;height:32px;padding:0 8px;font-size:12px;cursor:pointer;color:var(--mut);white-space:nowrap}
-.badge{font-size:10px;background:var(--gd);color:#04130d;border-radius:3px;padding:0 5px;margin-left:4px}
+.badge{font-size:10px;background:var(--gd);color:#130d24;border-radius:3px;padding:0 5px;margin-left:4px}
 .ck{display:flex;gap:6px;align-items:center;margin:4px 0}.ck input[type=text]{flex:1}.ck.d input[type=text]{text-decoration:line-through;color:var(--mut)}
 .cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @container (max-width:999px){.row{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"t t c x" "a a a i" "p l f y" "d n n n"}.t{grid-area:t}.c{grid-area:c}.a{grid-area:a}.p{grid-area:p}.l{grid-area:l}.fe{grid-area:f}.y{grid-area:y}.d{grid-area:d}.n{grid-area:n}.i{grid-area:i}.x{grid-area:x}}
 @container (max-width:559px){.row{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"t t" "c x" "a a" "p l" "f y" "d i" "n n"}}
-@media(max-width:700px){#app{padding:8px}.cols2{grid-template-columns:1fr}}
+@media(max-width:700px){#app{padding:8px}.cols2{grid-template-columns:1fr}.kv div,.cn{white-space:normal}}
 </style></head><body><div id="app"></div>
 <script>
 // ===== Firebase設定: Firebaseコンソールの「ウェブアプリ」設定をここに貼り付け(未設定ならこの端末のみ保存) =====
@@ -69,12 +69,12 @@ function nextTrip(){let b=null;S.trips.filter(t=>!t.arch&&t.start).forEach(t=>{c
 function jst(t1,z,e){if(!t1||e=='日本')return'';const m=mn(t1)-z*60,s=Math.floor(m/1440),k=((m%1440)+1440)%1440;return`日本 ${pad(k/60|0)}:${pad(k%60)}${s?(s>0?'(翌)':'(前)'):''}`}
 function nt(s){const d=String(s).replace(/\D/g,'');if(!d)return'';let h,m;if(d.length<=2){h=+d;m=0}else{h=+d.slice(0,-2);m=+d.slice(-2)}m=Math.round(m/5)*5;if(m>=60){m=0;h++}return pad(h%24)+':'+pad(m)}
 function nowLocal(z){const d=new Date(Date.now()+(9+z)*36e5);return[d.toISOString().slice(0,10),d.getUTCHours()*60+d.getUTCMinutes()]}
-const tsum=t=>t.cs.map(n=>`<div class=cn><b>${esc(n)}</b>　${CT[n].c}<br><span class=mut>${CT[n].c=='JPY'?'':'1'+CT[n].c+' = '+(rate(t,CT[n].c)||'未取得')+' 円'}</span><br><span class=mut>時差 ${tz(t,n)>=0?'+':''}${tz(t,n)}時間　現地 <span data-lt="${tz(t,n)}"></span></span></div>`).join('');
+const tsum=t=>t.cs.map(n=>`<div class=cn><b>${esc(n)}</b>　${CT[n].c}　<span class=mut>${CT[n].c=='JPY'?'':'1'+CT[n].c+' = '+(rate(t,CT[n].c)||'未取得')+' 円'}</span>　<span class=mut>時差 ${tz(t,n)>=0?'+':''}${tz(t,n)}時間　現地 <span data-lt="${tz(t,n)}"></span></span></div>`).join('');
 function card(t){const[P,Rr]=tot(t),[a,b]=ckc(t);return`<div class=card data-act=open data-id=${t.id} style="cursor:pointer"><h2>${esc(t.name||'無題')}</h2><div class=mut>${t.start} - ${t.end}　${t.cs.map(esc).join(' / ')||'国未設定'}</div><div style="margin:8px 0">予算 <b>${fmt(P)}円</b>　使用 <b>${fmt(Rr)}円</b><br>チェック ${a}/${b}</div><button class="o s" data-act=arch data-id=${t.id}>${t.arch?'復元':'アーカイブ'}</button> <button class="o s" data-act=del data-id=${t.id}>削除</button></div>`}
 function home(){const L=S.trips.filter(t=>!!t.arch==!!arch);
  return`<h1>TRAVEL NOTE<span class=sy id=sy></span></h1>
 <div class="card hero"><div class=mut>次の渡航先</div><div id=cd></div><div class=kv id=nx></div></div>
-<div class=grid id=cns style="margin-bottom:12px"></div>
+<div class=grid id=cns style="margin-bottom:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr))"></div>
 <div class=cols2><div class=card><h2>新しい日程表</h2><input id=nn placeholder="タイトル" style="width:100%;margin-bottom:6px"><div style="display:flex;gap:6px;margin-bottom:6px"><input id=ns type=date style="flex:1"><input id=ne type=date style="flex:1"></div><select id=nf style="width:100%;margin-bottom:8px"><option value="">チェックリストを複製しない</option>${S.trips.map(t=>`<option value=${t.id}>チェックリスト複製: ${esc(t.name)}</option>`).join('')}</select><button data-act=new>作成</button></div>
 <div class=card><h2>端末間の同期</h2><div class=mut style="margin-bottom:6px">同じ同期コードを入力した端末・ブラウザでデータが連動します(Firebase設定が必要)。</div><input id=sc value="${esc(code)}" placeholder="同期コード(英数字8文字以上推奨)" style="width:100%;margin-bottom:6px"><button data-act=sync>同期開始</button></div></div>
 <div class=tabs><button class="o ${arch?'':'on'}" data-act=tab data-v=0>進行中</button><button class="o ${arch?'on':''}" data-act=tab data-v=1>アーカイブ</button></div><div class=grid>${L.map(card).join('')||'<span class=mut>なし</span>'}</div>`}
@@ -83,7 +83,7 @@ function ckv(t){const lst=(k,n)=>`<div class=card><h2>${n}</h2>${t.ck[k].map((x,
 function dayv(t,d,di){const E=effs(d),cn=['日本',...t.cs],opt=(v,blank)=>`${blank?'<option value="">同上</option>':''}${cn.map(c=>`<option ${c==v?'selected':''}>${esc(c)}</option>`).join('')}`;
  return`<section class="card day"><div class=dh><input data-dl=${di} value="${esc(d.label)}" style="width:110px;font-weight:600">${d.date?`<input type=date data-dt=${di} value="${d.date}">`:''}<select data-dc=${di}>${opt(d.cc)}</select><span class=mut>基本の国</span><button class="o s" data-act=sort data-d=${di}>時間順に並べ替え</button><button class="o s" data-act=delday data-d=${di}>この日程を削除</button><b class=sum data-ds=${di}></b></div>
 ${d.rows.map((r,ri)=>{const e=E[ri],o=CT[e],z=tz(t,e),loc=o.c=='JPY';return`<div class=row data-d=${di} data-i=${ri}>
-<div class="f t"><label>時間(現地・5分刻み)<span class=badge style="display:none"></span></label><div class=tt>${d.date?`<input type=time step=300 data-tm=t1 value="${r.t1}" title="開始"><input type=time step=300 data-tm=t2 value="${r.t2}" title="終了">`:'<input disabled placeholder="-">'}</div><div class=hint>${jst(r.t1,z,e)}</div></div>
+<div class="f t"><label>時間(数字で入力 例930)<span class=badge style="display:none"></span></label><div class=tt><input data-tm=t1 value="${r.t1}" inputmode=numeric placeholder="開始" autocomplete=off><input data-tm=t2 value="${r.t2}" inputmode=numeric placeholder="終了" autocomplete=off></div><div class=hint>${jst(r.t1,z,e)}</div></div>
 <div class="f c"><label>国</label><select data-rc>${opt(r.c,1)}</select></div>
 <div class="f a"><label>内容</label><input data-f=a value="${esc(r.a)}"></div>
 <div class="f p"><label>予定(円)</label><input data-f=p type=number inputmode=decimal value="${r.p}"></div>
@@ -104,10 +104,10 @@ function tv(t){const sel=t.cs;
 <div class=tabs><button class="o ${tab=='d'?'on':''}" data-act=tb data-v=d>日程・予算</button><button class="o ${tab=='c'?'on':''}" data-act=tb data-v=c>チェックリスト</button></div>
 ${tab=='c'?ckv(t):`<details class=card id=setp ${setOpen?'open':''}><summary style="cursor:pointer;font-weight:600">国・レート・手数料の設定 (クリックで開閉)</summary><h2 style="margin-top:10px">訪れる国(あいうえお順・複数選択)</h2><div class=tabs>${kt}</div><div class=tabs>${chips}</div><div style="margin-top:6px">${sel.map(n=>`<span class=badge style="padding:2px 8px;font-size:12px">${esc(n)}</span> `).join('')||'<span class=mut>未選択</span>'}</div><div style="margin-top:8px">${ri}</div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><button data-act=rates>最新レートを取得</button><span class=mut id=rtm>${t.rt?'最終取得 '+new Date(t.rt).toLocaleString('ja-JP'):'未取得'}</span><label class=mut>カード手数料(%) 初期値<input data-tf=fee type=number step=.1 value="${t.fee}" style="width:70px;display:inline-block"></label></div>
-<details style="margin-top:8px"><summary class=mut>項目の幅調整</summary>${wd}</details></details>${t.days.map((d,i)=>dayv(t,d,i)).join('')}<button class=o data-act=addday>日程を追加</button><div class=card id=tt style="position:sticky;bottom:0;margin-top:12px;z-index:3;border-color:var(--ac)"></div>`}`}
+<details style="margin-top:8px"><summary class=mut>項目の幅調整</summary>${wd}</details></details>${t.days.map((d,i)=>dayv(t,d,i)).join('')}<button class=o data-act=addday>日程を追加</button><div class=card id=tt style="position:sticky;bottom:0;margin-top:12px;z-index:3;border-color:var(--ac);white-space:nowrap;overflow-x:auto;font-size:13px"></div>`}`}
 function render(){$('#app').innerHTML=cur?tv(cur):home();document.documentElement.style.setProperty('--cols',S.cw.map(w=>`minmax(0,${w}fr)`).join(' ')+' 30px');recalc();live();setSt()}
 function recalc(){const t=cur;if(!t||tab!='d')return;t.days.forEach((d,di)=>{const E=effs(d);let p=0,r=0;d.rows.forEach((x,ri)=>{const y=yen(t,x,E[ri]);p+=+x.p||0;r+=y||0;const a=$(`[data-y="${di},${ri}"]`),b=$(`[data-df="${di},${ri}"]`);if(a)a.value=y==null?'':fmt(y);if(b)b.value=y==null||x.p===''?'':fmt((+x.p)-y)});const e=$(`[data-ds="${di}"]`);if(e)e.textContent=`予算 ${fmt(p)}円 / 使用 ${fmt(r)}円`});
- const[P,Rr]=tot(t),e=$('#tt');if(e){const rs=[...new Set(t.cs.map(n=>CT[n].c))].filter(c=>c!='JPY').map(c=>`${c} 1=${t.rates[c]||'未取得'}円`).join('　');e.innerHTML=`合計　予算 <b>${fmt(P)}円</b>　使用 <b>${fmt(Rr)}円</b>　差額 <b>${fmt(P-Rr)}円</b>`+(rs?`<br><span class=mut>レート　${rs}</span>`:'')}}
+ const[P,Rr]=tot(t),e=$('#tt');if(e){const rs=[...new Set(t.cs.map(n=>CT[n].c))].filter(c=>c!='JPY').map(c=>`${c} 1=${t.rates[c]||'未取得'}円`).join('　');e.innerHTML=`合計　予算 <b>${fmt(P)}円</b>　使用 <b>${fmt(Rr)}円</b>　差額 <b>${fmt(P-Rr)}円</b>`+(rs?`　<span class=mut>レート　${rs}</span>`:'')}}
 function live(){const cd=$('#cd');if(cd){const b=nextTrip();if(b){const m=Math.floor((b.ms-Date.now())/6e4),[P,Rr]=tot(b.t),[a,c]=ckc(b.t);cd.textContent=`${b.t.name}　あと ${m/1440|0}日 ${pad((m%1440)/60|0)}時間 ${pad(m%60)}分`;const lt=new Date(b.ms+(9+tz(b.t,b.e))*36e5);$('#nx').innerHTML=`<div><span class=mut>出発(日本時間)</span><b>${new Date(b.ms+9*36e5).toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>出発(現地時間)</span><b>${lt.toISOString().slice(0,16).replace('T',' ')}</b></div><div><span class=mut>最初の予定</span><b>${b.r?esc(b.r.a||'-'):'未設定'}</b></div><div><span class=mut>期間</span><b>${b.t.start} - ${b.t.end}</b></div><div><span class=mut>予算</span><b>${fmt(P)}円</b></div><div><span class=mut>使用済み</span><b>${fmt(Rr)}円</b></div><div><span class=mut>チェックリスト</span><b>${a} / ${c}</b></div><div><span class=mut>訪問国</span><b>${b.t.cs.map(esc).join(' ')||'未設定'}</b></div>`;$('#cns').innerHTML=tsum(b.t)}else{cd.textContent='日程表を作成してください';$('#nx').innerHTML='';$('#cns').innerHTML=''}}
  $$('[data-lt]').forEach(e=>{const d=new Date(Date.now()+(9+ +e.dataset.lt)*36e5);e.textContent=d.toISOString().slice(5,16).replace('T',' ')});
  if(!cur||tab!='d')return;cur.days.forEach((d,di)=>{if(!d.date)return;const E=effs(d);d.rows.forEach((r,ri)=>{const el=$(`.row[data-d="${di}"][data-i="${ri}"]`);if(!el)return;const[nd,nm]=nowLocal(tz(cur,E[ri])),s=mn(r.t1);let e=mn(r.t2);if(e==null||(s!=null&&e<=s)){const nx=d.rows.slice(ri+1).find(x=>x.t1);e=nx?mn(nx.t1):1440}
@@ -142,7 +142,7 @@ document.addEventListener('input',e=>{const el=e.target,q=el.dataset;
  else if(q.g=='r'){cur.rates[q.cur]=+el.value;recalc();save(cur)}else if(q.tf){cur[q.tf]=el.value;recalc();save(cur)}
  else if(q.ckt!=null){cur.ck[q.k][+q.i].t=el.value;save(cur)}else if(q.tm){const r=el.closest('.row');cur.days[+r.dataset.d].rows[+r.dataset.i][q.tm]=el.value;save(cur)}else if(q.dl!=null){cur.days[+q.dl].label=el.value;save(cur)}});
 document.addEventListener('change',e=>{const el=e.target,q=el.dataset,r=el.closest('.row');
- if(q.tm){const x=cur.days[+r.dataset.d].rows[+r.dataset.i];x[q.tm]=nt(el.value);save(cur);render()}
+ if(q.tm){const di=+r.dataset.d,ri=+r.dataset.i,x=cur.days[di].rows[ri],v=nt(el.value);x[q.tm]=v;el.value=v;save(cur);const E=effs(cur.days[di])[ri];$('.hint',r).textContent=jst(x.t1,tz(cur,E),E);live()}
  else if(q.rc!=null){cur.days[+r.dataset.d].rows[+r.dataset.i].c=el.value;save(cur);render()}
  else if(q.dc!=null){cur.days[+q.dc].cc=el.value;save(cur);render()}else if(q.dt!=null){cur.days[+q.dt].date=el.value;save(cur);render()}
  else if(q.g=='z'){cur.tz[q.n]=+el.value;save(cur);render()}else if(q.g=='r'){render()}
