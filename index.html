@@ -27,7 +27,7 @@ button.o{background:none;color:var(--ink);border-color:var(--line)}button.o.on{b
 .i{min-height:62px}.i .pic{display:flex;gap:4px;height:48px;align-items:center}.i img{height:48px;max-width:100%;object-fit:cover;border-radius:4px;cursor:zoom-in}
 .i img.big{position:fixed;inset:4%;width:92%;height:92%;object-fit:contain;background:#000c;z-index:9;cursor:zoom-out;border-radius:0}
 .up{display:inline-flex;align-items:center;justify-content:center;border:1px dashed var(--mut);border-radius:4px;height:32px;padding:0 8px;font-size:12px;cursor:pointer;color:var(--mut);white-space:nowrap}
-.badge{font-size:10px;background:var(--gd);color:#130d24;border-radius:3px;padding:0 5px;margin-left:4px}
+.hdrag{cursor:grab;touch-action:none;text-align:center;color:var(--mut);font-size:15px;line-height:1;padding:3px 0;user-select:none;-webkit-user-select:none}.row.dragging{opacity:.55;background:var(--now);box-shadow:0 4px 14px #0008}.row.dgt{box-shadow:0 -2px 0 var(--ac)}.badge{font-size:10px;background:var(--gd);color:#130d24;border-radius:3px;padding:0 5px;margin-left:4px}
 .ck{display:flex;gap:6px;align-items:center;margin:4px 0}.ck input[type=text]{flex:1}.ck.d input[type=text]{text-decoration:line-through;color:var(--mut)}
 .cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
@@ -111,7 +111,7 @@ ${d.rows.map((r,ri)=>{const e=E[ri],o=CT[e],z=tz(t,e),loc=o.c=='JPY',m=r.fm||(r.
 <div class="f d"><label>差額(円)</label><input data-df="${di},${ri}" disabled></div>
 <div class="f n"><label>備考</label><input data-f=n value="${esc(r.n)}"></div>
 <div class="f i"><label>画像</label><div class=pic>${r.img?`<img src="${r.img}" data-act=zoom>`:''}<label class=up style="height:32px">${r.img?'変更':'追加'}<input type=file accept="image/*" hidden data-up="${di},${ri}"></label></div></div>
-<div class="f x"><label>&nbsp;</label><button class=o data-act=delrow data-d=${di} data-i=${ri}>x</button></div></div>`}).join('')}
+<div class="f x"><label>&nbsp;</label><div class=hdrag data-hdrag title="ドラッグで並び替え">⠿</div><button class=o data-act=delrow data-d=${di} data-i=${ri}>x</button></div></div>`}).join('')}
 <div style="margin-top:8px"><button class="o s" data-act=addrow data-d=${di}>行を追加</button></div></section>`}
 function tv(t){const sel=t.cs;
  const kt=ROWS.map((r,i)=>`<button class="o s ${kr==i?'on':''}" data-act=kr data-v=${i}>${r[0]}行</button>`).join('');
@@ -180,6 +180,19 @@ async function fbStart(){if(!FBCFG||!code){setSt();return}try{if(!window.firebas
   let o;try{o=JSON.parse(ch.doc.data().json)}catch(e){return}if(o.kind=='tpl'){const j=S.tpls.findIndex(t=>t.id==id);if(j<0)S.tpls.push(o);else if((o.updated||0)>(S.tpls[j].updated||0))S.tpls[j]=o;return}const i=S.trips.findIndex(t=>t.id==id);if(i<0)S.trips.push(o);else if((o.updated||0)>(S.trips[i].updated||0)){S.trips[i]=o;if(cur&&cur.id==id)cur=o}});
   if(first){first=0;[...S.trips,...S.tpls].forEach(t=>{if(!sn.docs.some(d=>d.id==t.id))col.doc(t.id).set({json:JSON.stringify(t)})})}
   persist();const a=document.activeElement;if(!a||!/INPUT|SELECT/.test(a.tagName))render();else setSt()},()=>setSt('同期エラー(設定・ルールを確認)'));setSt()}catch(e){setSt('Firebase読込に失敗')}}
+// ===== ドラッグで並び替え(日程編集の行・タッチ対応) =====
+let dg=null;
+document.addEventListener('pointerdown',e=>{const h=e.target.closest('[data-hdrag]');if(!h||!cur)return;const row=h.closest('.row');if(!row)return;
+ e.preventDefault();dg={d:+row.dataset.d,i:+row.dataset.i,el:row,y:e.clientY,to:+row.dataset.i};
+ row.classList.add('dragging');row.style.position='relative';row.style.zIndex='6';try{h.setPointerCapture(e.pointerId)}catch(_){}});
+document.addEventListener('pointermove',e=>{if(!dg)return;const dy=e.clientY-dg.y;dg.el.style.transform='translateY('+dy+'px)';
+ const sec=dg.el.closest('section');if(!sec)return;const rows=$$('.row',sec).filter(r=>r!==dg.el);let to=rows.length;
+ rows.forEach((r,x)=>{const b=r.getBoundingClientRect();r.classList.remove('dgt');if(to==rows.length&&e.clientY<b.top+b.height/2)to=x});
+ if(rows[to])rows[to].classList.add('dgt');dg.to=to});
+function dgEnd(){if(!dg)return;const d=dg.d,i=dg.i,to=dg.to,el=dg.el;dg=null;el.classList.remove('dragging');el.style.transform='';el.style.position='';el.style.zIndex='';$$('.row.dgt').forEach(r=>r.classList.remove('dgt'));
+ if(!cur||!cur.days[d])return;const rows=cur.days[d].rows;if(to!=i&&rows[i]){const mv=rows.splice(i,1)[0];rows.splice(to,0,mv);save(cur);render()}}
+document.addEventListener('pointerup',dgEnd);document.addEventListener('pointercancel',dgEnd);
+
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,d=+b.dataset.d,i=+b.dataset.i,id=b.dataset.id,T=S.trips.find(t=>t.id==id),k=b.dataset.k;
  if(a=='zoom'){b.classList.toggle('big');return}
  if(a=='open'){cur=T;tab='v';getRates(T)}else if(a=='back')cur=null;else if(a=='tab')arch=+b.dataset.v;else if(a=='tb')tab=b.dataset.v;else if(a=='kr')kr=+b.dataset.v;
